@@ -15,7 +15,7 @@ $s = Class_Ygb_DB::get_settings();
 	<div class="ygb-columns">
 		<div class="ygb-col">
 			<form method="post" action="options.php">
-				<?php settings_fields( 'ygb_bot_group' ); ?>
+				<?php settings_fields( 'ygb_bot_apariencia' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row"><label for="ygb-bot-name"><?php esc_html_e( 'Nombre del bot', 'ygb-bot' ); ?></label></th>
