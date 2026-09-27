@@ -49,16 +49,19 @@ class Class_Ygb_Admin {
 		}
 		$suffix = self::suffix();
 
+		$css = file_exists( YGB_BOT_PATH . 'admin/css/admin' . $suffix . '.css' ) ? 'admin/css/admin' . $suffix . '.css' : 'admin/css/admin.css';
 		wp_enqueue_style(
 			'ygb-admin',
-			YGB_BOT_URL . 'admin/css/admin' . $suffix . '.css',
+			YGB_BOT_URL . $css,
 			array(),
 			YGB_BOT_VERSION
 		);
+		$js  = file_exists( YGB_BOT_PATH . 'admin/js/admin' . $suffix . '.js' ) ? 'admin/js/admin' . $suffix . '.js' : 'admin/js/admin.js';
+		$dep = false !== strpos( $hook, 'apariencia' ) || false !== strpos( $hook, 'dashboard' ) ? array( 'wp-media' ) : array();
 		wp_enqueue_script(
 			'ygb-admin',
-			YGB_BOT_URL . 'admin/js/admin' . $suffix . '.js',
-			array(),
+			YGB_BOT_URL . $js,
+			$dep,
 			YGB_BOT_VERSION,
 			true
 		);
@@ -78,8 +81,10 @@ class Class_Ygb_Admin {
 			)
 		);
 
-		// Media library para el selector de imagen/adjuntos.
-		wp_enqueue_media();
+		// Media library solo donde se usa (selector de imagen/adjuntos en Preguntas).
+		if ( false !== strpos( $hook, 'preguntas' ) ) {
+			wp_enqueue_media();
+		}
 	}
 
 	/**
@@ -219,6 +224,10 @@ class Class_Ygb_Admin {
 			case 'clear_logs':
 				self::clear_logs();
 				break;
+
+			case 'export_logs':
+				self::export_logs( isset( $_POST['tipo'] ) ? sanitize_key( wp_unslash( $_POST['tipo'] ) ) : 'conversaciones' );
+				break;
 		}
 	}
 
@@ -351,6 +360,52 @@ class Class_Ygb_Admin {
 			$wpdb->query( "TRUNCATE TABLE {$map[$what]}" ); // phpcs:ignore WordPress.DB.PreparedSQL
 		}
 		self::redirect( admin_url( 'admin.php?page=ygb-bot-registros&ygb_msg=saved' ) );
+	}
+
+	/**
+	 * Exporta los registros (logs) a CSV.
+	 *
+	 * @param string $tipo conversaciones|derivaciones|fallbacks.
+	 * @return void
+	 */
+	private static function export_logs( $tipo ) {
+		global $wpdb;
+
+		$allowed = array( 'conversaciones', 'derivaciones', 'fallbacks' );
+		if ( ! in_array( $tipo, $allowed, true ) ) {
+			$tipo = 'conversaciones';
+		}
+
+		$tables = Class_Ygb_DB::tables();
+		$name   = 'ygb-' . $tipo . '-' . gmdate( 'Ymd-His' );
+
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $name . '.csv' );
+
+		$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+
+		if ( 'fallbacks' === $tipo ) {
+			fputcsv( $out, array( 'id', 'mensaje_usuario', 'fecha' ) );
+			$rows = $wpdb->get_results( "SELECT * FROM {$tables['fallbacks']} ORDER BY id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL
+			foreach ( (array) $rows as $r ) {
+				fputcsv( $out, array( $r->id, $r->mensaje_usuario, $r->fecha ) );
+			}
+		} elseif ( 'derivaciones' === $tipo ) {
+			fputcsv( $out, array( 'id', 'conversacion_id', 'canal', 'mensaje_usuario', 'estado', 'fecha' ) );
+			$rows = $wpdb->get_results( "SELECT * FROM {$tables['derivaciones']} ORDER BY id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL
+			foreach ( (array) $rows as $r ) {
+				fputcsv( $out, array( $r->id, $r->conversacion_id, $r->canal, $r->mensaje_usuario, $r->estado, $r->fecha ) );
+			}
+		} else {
+			fputcsv( $out, array( 'conversacion_id', 'emisor', 'mensaje', 'pregunta_id', 'score', 'fecha' ) );
+			$rows = $wpdb->get_results( "SELECT * FROM {$tables['mensajes']} ORDER BY conversacion_id ASC, id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL
+			foreach ( (array) $rows as $r ) {
+				fputcsv( $out, array( $r->conversacion_id, $r->emisor, $r->mensaje, $r->pregunta_id, $r->score, $r->fecha ) );
+			}
+		}
+
+		fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		exit;
 	}
 
 	/**
