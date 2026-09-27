@@ -15,7 +15,7 @@ $prefix = Class_Ygb_DB::OPTION_KEY;
 	<p class="description"><?php esc_html_e( 'Configura qué hace el bot cuando no encuentra una respuesta y los canales para contactar con un humano.', 'ygb-bot' ); ?></p>
 
 	<form method="post" action="options.php">
-		<?php settings_fields( 'ygb_bot_group' ); ?>
+		<?php settings_fields( 'ygb_bot_derivacion' ); ?>
 
 		<h2><?php esc_html_e( 'Fallback', 'ygb-bot' ); ?></h2>
 		<table class="form-table" role="presentation">

@@ -21,6 +21,91 @@ class Class_Ygb_DB {
 	const OPTION_KEY = 'ygb_bot_settings';
 
 	/**
+	 * Campos que pertenecen a cada formulario del admin.
+	 *
+	 * Cada pantalla (Ajustes generales, Apariencia, Derivación) comparte la
+	 * misma opción (`OPTION_KEY`) pero envía solo sus propios inputs. Al
+	 * guardar, `sanitize_settings()` necesita saber qué campos "pertenecen" al
+	 * formulario submitido para no tratar como desactivados los checkboxes
+	 * ausentes de las otras pantallas (un checkbox no marcado simplemente no
+	 * viaja en el POST). Si no se hace así, un formulario pisa los datos del
+	 * otro y parece que "sobrescriben" los ajustes.
+	 *
+	 * @var array<string,array<int,string>>
+	 */
+	const FORM_FIELDS = array(
+		'ygb_bot_group'         => array(
+			'enabled',
+			'threshold',
+			'autoload',
+			'cache_enabled',
+			'store_chats',
+			'anonymize_ips',
+			'require_consent',
+		),
+		'ygb_bot_apariencia'    => array(
+			'bot_name',
+			'avatar',
+			'color',
+			'position',
+			'bubble_icon',
+			'size',
+			'welcome',
+			'placeholder',
+			'show_topics',
+			'show_faq',
+			'save_history',
+			'lazy_load',
+			'show_support_btn',
+		),
+		'ygb_bot_derivacion'    => array(
+			'fallback_msg',
+			'threshold',
+			'dc_email',
+			'dc_whatsapp',
+			'dc_contact',
+			'dc_form',
+			'support_email',
+			'whatsapp',
+			'contact_url',
+			'email_subject',
+			'privacy_url',
+		),
+	);
+
+	/**
+	 * Slug del grupo de ajustes actualmente activo.
+	 *
+	 * WordPress ejecuta `sanitize_option()` sobre la opción durante la
+	 * validación de `options-post.php`, justo después de correr el argumento
+	 * `sanitize_callback` de `register_setting()`. Guardamos aquí el slug del
+	 * grupo en `admin_init` para poder leerlo después desde el sanitizador y
+	 * saber qué formulario se envió.
+	 *
+	 * @var string|null
+	 */
+	private static $current_group = null;
+
+	/**
+	 * Define el grupo de ajustes activo (llamado desde register_settings()).
+	 *
+	 * @param string $group Slug del grupo registrado con register_setting().
+	 * @return void
+	 */
+	public static function set_current_group( $group ) {
+		self::$current_group = (string) $group;
+	}
+
+	/**
+	 * Devuelve el grupo de ajustes activo, si se conoce.
+	 *
+	 * @return string|null
+	 */
+	public static function get_current_group() {
+		return self::$current_group;
+	}
+
+	/**
 	 * Prefijo de tablas.
 	 *
 	 * @return string
@@ -122,35 +207,59 @@ class Class_Ygb_DB {
 	/**
 	 * Sanitiza los ajustes según su tipo.
 	 *
-	 * Se usa como callback de register_setting.
+	 * Se usa como callback de register_setting(). IMPORTANTE: las pantallas
+	 * de Ajustes generales, Apariencia y Derivación comparten esta misma
+	 * opción (`OPTION_KEY`) pero cada `<form>` solo envía sus propios campos.
+	 * Como los checkboxes no marcados no viajan en el POST, antes se forzaban
+	 * a 0 todos los booleanos "ausentes", lo que hacía que guardar un
+	 * formulario pisara / reseteara los datos del otro. Ahora solo se
+	 * procesan los campos pertenecientes al grupo submitido (ver
+	 * FORM_FIELDS); los demás se conservan con su valor actual.
 	 *
 	 * @param mixed $input Valores crudos del formulario.
 	 * @return array
 	 */
 	public static function sanitize_settings( $input ) {
-		$out      = self::get_settings();
-		$input    = is_array( $input ) ? $input : array();
-		$bools    = array( 'enabled', 'autoload', 'cache_enabled', 'store_chats', 'anonymize_ips', 'require_consent', 'show_topics', 'show_faq', 'save_history', 'lazy_load', 'dc_email', 'dc_whatsapp', 'dc_contact', 'dc_form', 'show_support_btn' );
-		$texts    = array( 'bot_name', 'bubble_icon', 'size', 'position', 'placeholder', 'support_email', 'whatsapp', 'contact_url', 'privacy_url', 'email_subject' );
+		$out   = self::get_settings();
+		$input = is_array( $input ) ? $input : array();
+
+		// Campos del formulario que se acaba de enviar. Si no podemos
+		// determinarlo, asumimos todos para no perder compatibilidad.
+		$fields = self::fields_for_current_submission();
+
+		$is_present = static function ( $key ) use ( $input, $fields ) {
+			return in_array( $key, $fields, true ) && array_key_exists( $key, $input );
+		};
+		$in_form = static function ( $key ) use ( $fields ) {
+			return in_array( $key, $fields, true );
+		};
+
+		$bools     = array( 'enabled', 'autoload', 'cache_enabled', 'store_chats', 'anonymize_ips', 'require_consent', 'show_topics', 'show_faq', 'save_history', 'lazy_load', 'dc_email', 'dc_whatsapp', 'dc_contact', 'dc_form', 'show_support_btn' );
+		$texts     = array( 'bot_name', 'bubble_icon', 'size', 'position', 'placeholder', 'support_email', 'whatsapp', 'contact_url', 'privacy_url', 'email_subject' );
 		$textareas = array( 'welcome', 'fallback_msg' );
 
 		foreach ( $bools as $key ) {
-			$out[ $key ] = empty( $input[ $key ] ) ? 0 : 1;
+			// Solo tocar los booleanos cuyo checkbox pertenece al form
+			// enviado; ausente = desmarcado => 0. Los de otras pantallas
+			// se dejan intactos.
+			if ( $in_form( $key ) ) {
+				$out[ $key ] = $is_present( $key ) ? 1 : 0;
+			}
 		}
 		foreach ( $texts as $key ) {
-			if ( isset( $input[ $key ] ) ) {
+			if ( $is_present( $key ) ) {
 				$out[ $key ] = sanitize_text_field( wp_unslash( $input[ $key ] ) );
 			}
 		}
 		foreach ( $textareas as $key ) {
-			if ( isset( $input[ $key ] ) ) {
+			if ( $is_present( $key ) ) {
 				$out[ $key ] = sanitize_textarea_field( wp_unslash( $input[ $key ] ) );
 			}
 		}
 
-		$out['threshold'] = isset( $input['threshold'] ) ? max( 1, min( 100, absint( $input['threshold'] ) ) ) : $out['threshold'];
-		$out['color']     = isset( $input['color'] ) ? self::sanitize_hex( $input['color'], $out['color'] ) : $out['color'];
-		$out['avatar']    = isset( $input['avatar'] ) ? mb_substr( sanitize_text_field( wp_unslash( $input['avatar'] ) ), 0, 32 ) : $out['avatar'];
+		$out['threshold'] = $is_present( 'threshold' ) ? max( 1, min( 100, absint( $input['threshold'] ) ) ) : $out['threshold'];
+		$out['color']     = $is_present( 'color' ) ? self::sanitize_hex( $input['color'], $out['color'] ) : $out['color'];
+		$out['avatar']    = $is_present( 'avatar' ) ? mb_substr( sanitize_text_field( wp_unslash( $input['avatar'] ) ), 0, 32 ) : $out['avatar'];
 
 		if ( ! in_array( $out['position'], array( 'right', 'left' ), true ) ) {
 			$out['position'] = 'right';
@@ -168,6 +277,34 @@ class Class_Ygb_DB {
 		 * @param array $out Ajustes finales.
 		 */
 		return apply_filters( 'ygb_sanitize_settings', $out );
+	}
+
+	/**
+	 * Devuelve la lista de campos que pertenecen al envío actual.
+	 *
+	 * Estrategia (en orden de prioridad):
+	 *  1. Si `option_page` llega en el POST y coincide con una clave de
+	 *     FORM_FIELDS, devolvemos sus campos.
+	 *  2. Si no, usamos el grupo registrado durante `admin_init`
+	 *     (`self::$current_group`).
+	 *  3. Como último recurso, asumimos todos los campos conocidos
+	 *     (comportamiento antiguo) para no romper integraciones externas.
+	 *
+	 * @return array<int,string>
+	 */
+	public static function fields_for_current_submission() {
+		$page = isset( $_POST['option_page'] ) ? sanitize_key( wp_unslash( $_POST['option_page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( '' !== $page && isset( self::FORM_FIELDS[ $page ] ) ) {
+			return self::FORM_FIELDS[ $page ];
+		}
+		if ( null !== self::$current_group && isset( self::FORM_FIELDS[ self::$current_group ] ) ) {
+			return self::FORM_FIELDS[ self::$current_group ];
+		}
+		$all = array();
+		foreach ( self::FORM_FIELDS as $group_fields ) {
+			$all = array_merge( $all, $group_fields );
+		}
+		return array_unique( $all );
 	}
 
 	/**

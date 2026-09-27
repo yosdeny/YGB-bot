@@ -90,18 +90,48 @@ class Class_Ygb_Admin {
 	/**
 	 * Registra los ajustes con la Settings API.
 	 *
+	 * Cada pantalla del admin (Ajustes generales, Apariencia, Derivación)
+	 * tiene su propio grupo (`option_page`), pero todas escriben sobre la
+	 * misma opción (`Class_Ygb_DB::OPTION_KEY`). El `sanitize_callback`
+	 * compartido (`Class_Ygb_DB::sanitize_settings`) usa el grupo activo
+	 * para saber qué campos actualizar y cuáles conservar, evitando que un
+	 * formulario pise los datos del otro.
+	 *
 	 * @return void
 	 */
 	public static function register_settings() {
-		register_setting(
-			'ygb_bot_group',
-			Class_Ygb_DB::OPTION_KEY,
-			array(
-				'type'              => 'array',
-				'sanitize_callback' => array( 'Class_Ygb_DB', 'sanitize_settings' ),
-				'default'           => Class_Ygb_DB::default_settings(),
-			)
-		);
+		$groups = array( 'ygb_bot_group', 'ygb_bot_apariencia', 'ygb_bot_derivacion' );
+
+		foreach ( $groups as $group ) {
+			register_setting(
+				$group,
+				Class_Ygb_DB::OPTION_KEY,
+				array(
+					'type'              => 'array',
+					'sanitize_callback' => array( __CLASS__, 'sanitize_settings_for_group' ),
+					'default'           => Class_Ygb_DB::default_settings(),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Wrapper del sanitizador que recuerda qué grupo se está procesando.
+	 *
+	 * Se registra como callback porque WordPress lo invoca dentro de
+	 * `sanitize_option()` durante el POST a `options.php`, justo después de
+	 * este filtro, lo que permite a `Class_Ygb_DB::sanitize_settings()`
+	 * leer el grupo activo si `option_page` no estuviera disponible.
+	 *
+	 * @param mixed $value Valor crudo de la opción.
+	 * @return mixed
+	 */
+	public static function sanitize_settings_for_group( $value ) {
+		// Determinar el grupo real mirando option_page del POST.
+		if ( isset( $_POST['option_page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			Class_Ygb_DB::set_current_group( sanitize_key( wp_unslash( $_POST['option_page'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
+		return Class_Ygb_DB::sanitize_settings( $value );
 	}
 
 	/**
