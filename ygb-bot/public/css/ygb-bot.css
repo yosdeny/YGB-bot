@@ -1,0 +1,96 @@
+/* YGB Bot — estilos del widget frontend (mobile-first) */
+.ygb-widget{--ygb-radius:14px;font-size:15px;line-height:1.45}
+.ygb-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* Burbuja flotante */
+.ygb-bubble{position:fixed;z-index:99998;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;background:var(--ygb-color,#2271b1);color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;transition:transform .15s ease,background .15s ease}
+.ygb-bubble:hover,.ygb-bubble:focus-visible{transform:scale(1.07);background:var(--ygb-color-dark,#135e96);outline:2px solid currentColor}
+.ygb-bubble-icon{font-size:26px;line-height:1}
+.ygb-pos-right .ygb-bubble{right:20px;bottom:20px}
+.ygb-pos-left .ygb-bubble{left:20px;bottom:20px}
+.ygb-bubble.ygb-hidden{display:none}
+
+/* Ventana */
+.ygb-window{position:fixed;z-index:99999;display:flex;flex-direction:column;background:#fff;color:#1d2327;border-radius:var(--ygb-radius);box-shadow:0 12px 48px rgba(0,0,0,.28);overflow:hidden;height:min(70vh,520px)}
+.ygb-window[hidden]{display:none}
+.ygb-pos-right .ygb-window{right:20px;bottom:92px;left:auto}
+.ygb-pos-left .ygb-window{left:20px;bottom:92px;right:auto}
+@media (max-width:600px){
+  .ygb-pos-right .ygb-window,.ygb-pos-left .ygb-window{left:8px;right:8px;bottom:84px;height:72vh}
+}
+.ygb-inline .ygb-window{position:relative;inset:auto;height:460px;width:100%;max-width:420px;border:1px solid #dcdcde;margin:0 auto}
+
+/* Tamaños */
+.ygb-size-small .ygb-window{width:300px}
+.ygb-size-medium .ygb-window{width:360px}
+.ygb-size-large .ygb-window{width:420px}
+@media (max-width:600px){.ygb-window{width:auto!important}}
+
+/* Cabecera */
+.ygb-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--ygb-color,#2271b1);color:#fff}
+.ygb-avatar{font-size:22px;background:rgba(255,255,255,.18);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ygb-header-texts{display:flex;flex-direction:column;flex:1;min-width:0}
+.ygb-title{font-size:15px}
+.ygb-status{font-size:11.5px;opacity:.9;display:flex;align-items:center;gap:5px}
+.ygb-dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;display:inline-block}
+.ygb-minimize{background:transparent;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+.ygb-minimize:hover,.ygb-minimize:focus-visible{background:rgba(255,255,255,.2);outline:2px solid #fff}
+
+/* Consentimiento RGPD */
+.ygb-consent{padding:10px 14px;background:#fcf9e8;border-bottom:1px solid #dba617;font-size:13px}
+.ygb-consent p{margin:0 0 8px}
+.ygb-consent-actions{display:flex;gap:8px}
+
+/* Mensajes */
+.ygb-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:#f6f7f7;scroll-behavior:smooth}
+.ygb-msg{display:flex;gap:8px;max-width:88%}
+.ygb-msg-bot{align-self:flex-start}
+.ygb-msg-user{align-self:flex-end;flex-direction:row-reverse}
+.ygb-msg-avatar{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:var(--ygb-color,#2271b1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ygb-bubble-body{background:#fff;border:1px solid #e3e5e7;border-radius:12px;padding:9px 12px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.ygb-msg-user .ygb-bubble-body{background:var(--ygb-color,#2271b1);border-color:transparent;color:#fff}
+.ygb-msg-time{display:block;font-size:10px;opacity:.6;margin-top:4px}
+.ygb-bubble-body p{margin:0 0 .5em}
+.ygb-bubble-body p:last-child{margin-bottom:0}
+.ygb-bubble-body a{color:inherit;text-decoration:underline}
+.ygb-attachment{margin:.4em 0 0}
+
+/* Escribiendo… */
+.ygb-typing{align-self:flex-start;background:#fff;border:1px solid #e3e5e7;border-radius:12px;padding:10px 14px;font-size:12.5px;color:#646970;display:flex;gap:8px;align-items:center}
+.ygb-typing .dot{width:6px;height:6px;border-radius:50%;background:#94989d;animation:ygb-blink 1.2s infinite both}
+.ygb-typing .dot:nth-child(2){animation-delay:.2s}
+.ygb-typing .dot:nth-child(3){animation-delay:.4s}
+@keyframes ygb-blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* Botones rápidos / chips */
+.ygb-quick{padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid #eee;background:#fff}
+.ygb-chip{border:1px solid var(--ygb-color,#2271b1);color:var(--ygb-color,#2271b1);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;transition:background .12s}
+.ygb-chip:hover,.ygb-chip:focus-visible{background:var(--ygb-color,#2271b1);color:#fff;outline:2px solid transparent}
+.ygb-quick-label{width:100%;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970;margin-bottom:2px}
+
+/* Pie / formulario */
+.ygb-footer{border-top:1px solid #e3e5e7;background:#fff;padding:8px 10px 10px}
+.ygb-support-persist{display:block;width:100%;margin-bottom:8px;background:#f0f6fc;border:1px solid var(--ygb-color,#2271b1);color:var(--ygb-color-dark,#135e96);border-radius:8px;padding:7px;cursor:pointer;font-size:13px}
+.ygb-support-persist:hover,.ygb-support-persist:focus-visible{background:var(--ygb-color,#2271b1);color:#fff}
+.ygb-input-row{display:flex;gap:8px}
+.ygb-input{flex:1;min-width:0;border:1px solid #8c8f94;border-radius:8px;padding:9px 11px;font-size:14px}
+.ygb-input:focus{outline:2px solid var(--ygb-color,#2271b1);outline-offset:1px}
+.ygb-send{background:var(--ygb-color,#2271b1);border:0;color:#fff;border-radius:8px;width:42px;cursor:pointer;font-size:16px}
+.ygb-send:hover,.ygb-send:focus-visible{background:var(--ygb-color-dark,#135e96)}
+
+/* Tema oscuro */
+.ygb-dark .ygb-window{background:#1d2327;color:#e3e5e7}
+.ygb-dark .ygb-messages{background:#15181a}
+.ygb-dark .ygb-bubble-body{background:#2c3338;border-color:#3c434a;color:#e3e5e7}
+.ygb-dark .ygb-msg-user .ygb-bubble-body{background:var(--ygb-color,#2271b1);color:#fff}
+.ygb-dark .ygb-typing{background:#2c3338;border-color:#3c434a;color:#c3c4c7}
+.ygb-dark .ygb-quick,.ygb-dark .ygb-footer{background:#1d2327;border-color:#3c434a}
+.ygb-dark .ygb-chip{background:transparent;color:#8ab1d9}
+.ygb-dark .ygb-input{background:#2c3338;border-color:#3c434a;color:#e3e5e7}
+.ygb-dark .ygb-support-persist{background:#2c3338;color:#8ab1d9}
+
+/* Accesibilidad: reducir animaciones */
+@media (prefers-reduced-motion:reduce){
+  .ygb-bubble,.ygb-chip{transition:none}
+  .ygb-typing .dot{animation:none}
+}

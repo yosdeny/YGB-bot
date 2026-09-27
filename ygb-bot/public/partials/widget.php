@@ -1,0 +1,70 @@
+<?php
+/**
+ * Partial del widget de chat (frontend).
+ *
+ * Variables disponibles: $ygb_inline (bool), $ygb_theme (light|dark).
+ *
+ * @package YGB_Bot
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+$ygb_settings = array_merge(
+	Class_Ygb_DB::get_settings(),
+	array( 'consentText' => __( 'Al continuar aceptas que esta conversación pueda guardarse para mejorar el servicio.', 'ygb-bot' ) )
+); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$ygb_inline   = isset( $ygb_inline ) ? (bool) $ygb_inline : false; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$ygb_theme    = isset( $ygb_theme ) && 'dark' === $ygb_theme ? 'dark' : 'light'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+?>
+<div class="ygb-widget ygb-<?php echo esc_attr( $ygb_theme ); ?> <?php echo $ygb_inline ? 'ygb-inline' : 'ygb-floating ygb-pos-' . esc_attr( $ygb_settings['position'] ); ?> ygb-size-<?php echo esc_attr( $ygb_settings['size'] ); ?>"
+	data-ygb-instance="<?php echo $ygb_inline ? 'inline' : 'floating'; ?>"
+	role="region"
+	aria-label="<?php esc_attr_e( 'Chat de ayuda', 'ygb-bot' ); ?>">
+
+	<?php if ( ! $ygb_inline ) : ?>
+		<button type="button" class="ygb-bubble" aria-label="<?php esc_attr_e( 'Abrir chat', 'ygb-bot' ); ?>" aria-expanded="false">
+			<span class="ygb-bubble-icon" aria-hidden="true"><?php echo esc_html( $ygb_settings['bubble_icon'] ); ?></span>
+		</button>
+	<?php endif; ?>
+
+	<div class="ygb-window" role="dialog" aria-modal="false" aria-label="<?php esc_attr_e( 'Ventana de chat', 'ygb-bot' ); ?>" hidden>
+
+		<header class="ygb-header">
+			<span class="ygb-avatar" aria-hidden="true"><?php echo esc_html( $ygb_settings['avatar'] ); ?></span>
+			<span class="ygb-header-texts">
+				<strong class="ygb-title"><?php echo esc_html( $ygb_settings['bot_name'] ); ?></strong>
+				<small class="ygb-status"><span class="ygb-dot" aria-hidden="true"></span><?php esc_html_e( 'En línea', 'ygb-bot' ); ?></small>
+			</span>
+			<button type="button" class="ygb-minimize" aria-label="<?php esc_attr_e( 'Minimizar chat', 'ygb-bot' ); ?>">−</button>
+		</header>
+
+		<div class="ygb-consent" hidden>
+			<p>
+				<?php echo esc_html( $ygb_settings['consentText'] ); ?>
+				<?php if ( ! empty( $ygb_settings['privacy_url'] ) ) : ?>
+					<a href="<?php echo esc_url( $ygb_settings['privacy_url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Política de privacidad', 'ygb-bot' ); ?></a>
+				<?php endif; ?>
+			</p>
+			<div class="ygb-consent-actions">
+				<button type="button" class="ygb-btn ygb-btn-primary ygb-consent-ok"><?php esc_html_e( 'Aceptar', 'ygb-bot' ); ?></button>
+				<button type="button" class="ygb-btn ygb-consent-no"><?php esc_html_e( 'No, gracias', 'ygb-bot' ); ?></button>
+			</div>
+		</div>
+
+		<div class="ygb-messages" id="ygb-messages" role="log" aria-live="polite" tabindex="0"></div>
+
+		<div class="ygb-quick" hidden></div>
+
+		<footer class="ygb-footer">
+			<button type="button" class="ygb-support-persist" title="<?php esc_attr_e( 'Hablar con un agente humano', 'ygb-bot' ); ?>">
+				💬 <?php esc_html_e( 'Hablar con soporte', 'ygb-bot' ); ?>
+			</button>
+			<form class="ygb-input-row">
+				<label class="screen-reader-text ygb-sr-only" for="ygb-input-msg"><?php esc_html_e( 'Escribe tu mensaje', 'ygb-bot' ); ?></label>
+				<input type="text" id="ygb-input-msg" class="ygb-input" autocomplete="off"
+					placeholder="<?php echo esc_attr( $ygb_settings['placeholder'] ); ?>" maxlength="500" />
+				<button type="submit" class="ygb-send" aria-label="<?php esc_attr_e( 'Enviar mensaje', 'ygb-bot' ); ?>">➤</button>
+			</form>
+		</footer>
+	</div>
+</div>
