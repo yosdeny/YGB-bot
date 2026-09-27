@@ -56,18 +56,20 @@ class Class_Ygb_Public {
 		$file_css = YGB_BOT_PATH . 'public/css/ygb-bot' . $suffix . '.css';
 		$file_js  = YGB_BOT_PATH . 'public/js/ygb-bot' . $suffix . '.js';
 
+		$css = file_exists( $file_css ) ? 'public/css/ygb-bot' . $suffix . '.css' : 'public/css/ygb-bot.css';
 		wp_enqueue_style(
 			'ygb-bot',
-			YGB_BOT_URL . 'public/css/ygb-bot' . $suffix . '.css',
+			YGB_BOT_URL . $css,
 			array(),
-			file_exists( $file_css ) ? $ver : $ver
+			$ver
 		);
 
+		$js = file_exists( $file_js ) ? 'public/js/ygb-bot' . $suffix . '.js' : 'public/js/ygb-bot.js';
 		wp_enqueue_script(
 			'ygb-bot',
-			YGB_BOT_URL . 'public/js/ygb-bot' . $suffix . '.js',
+			YGB_BOT_URL . $js,
 			array(), // Sin dependencia de jQuery: JS puro.
-			file_exists( $file_js ) ? $ver : $ver,
+			$ver,
 			true
 		);
 

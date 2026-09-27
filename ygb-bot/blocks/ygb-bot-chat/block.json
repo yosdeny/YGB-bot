@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ygb-bot/bot",
+	"title": "YGB Bot",
+	"category": "widgets",
+	"icon": "format-chat",
+	"description": "Inserta el chatbot YGB Bot (reglas locales, sin IA) en línea o como burbuja flotante.",
+	"keywords": [ "chat", "bot", "faq", "soporte" ],
+	"version": "1.0.0",
+	"textdomain": "ygb-bot",
+	"attributes": {
+		"theme": {
+			"type": "string",
+			"default": "light"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
