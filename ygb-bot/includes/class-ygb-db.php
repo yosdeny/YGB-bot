@@ -314,15 +314,22 @@ class Class_Ygb_DB {
 		if ( ! in_array( $out['position'], array( 'right', 'left' ), true ) ) {
 			$out['position'] = 'right';
 		}
-		// Tamaño de la ventana: porcentaje (25-100). Se migran los valores
-		// heredados del antiguo desplegable (small/medium/large).
-		if ( $is_present( 'size' ) || is_numeric( $out['size'] ) ) {
-			$legacy_sizes = array( 'small' => 40, 'medium' => 55, 'large' => 70 );
-			if ( isset( $legacy_sizes[ $out['size'] ] ) ) {
-				$out['size'] = $legacy_sizes[ $out['size'] ];
-			}
+		// Tamaño de la ventana: porcentaje (25-100). IMPORTANTE: se lee el valor
+		// enviado ($input); clamping sobre $out ignoraba el POST y siempre
+		// restauraba el valor anterior (o 0/25 si venía como texto heredado).
+		$raw_size = $is_present( 'size' ) ? $input['size'] : $out['size'];
+		// Se migran los valores heredados del antiguo desplegable (small/medium/large).
+		$legacy_sizes = array( 'small' => 40, 'medium' => 55, 'large' => 70 );
+		if ( is_string( $raw_size ) && isset( $legacy_sizes[ strtolower( trim( $raw_size ) ) ] ) ) {
+			$raw_size = $legacy_sizes[ strtolower( trim( $raw_size ) ) ];
 		}
-		$out['size'] = max( 25, min( 100, absint( $out['size'] ) ) );
+		// Si el valor no es un porcentaje válido (p. ej. texto heredado sin
+		// migrar o campo vacío), se usa el defecto numérico: absint() sobre una
+		// cadena como 'medium' produce 0 y rompía el clamp (la ventana quedaba
+		// en 0% / colapsada).
+		$size_pct   = absint( $raw_size );
+		$prev_size  = is_numeric( $out['size'] ) ? absint( $out['size'] ) : 55;
+		$out['size'] = max( 25, min( 100, $size_pct ? $size_pct : $prev_size ) );
 		$out['support_email'] = sanitize_email( $out['support_email'] );
 		$out['contact_url']   = esc_url_raw( $out['contact_url'] );
 		$out['privacy_url']   = esc_url_raw( $out['privacy_url'] );
