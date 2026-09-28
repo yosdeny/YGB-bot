@@ -16,7 +16,7 @@
 				el(
 					'p',
 					{ style: { fontSize: '34px', margin: '0' } },
-					'🤖'
+					'🖥️'
 				),
 				el(
 					'strong',
@@ -55,7 +55,7 @@
 									borderRadius: '10px 10px 0 0'
 								}
 							},
-							'🤖 ' + __( 'YGB Bot', 'ygb-bot' )
+							'🖥️ ' + __( 'YGB Bot', 'ygb-bot' )
 						),
 						el(
 							'div',

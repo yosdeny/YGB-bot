@@ -25,7 +25,7 @@ $s = Class_Ygb_DB::get_settings();
 						<th scope="row"><label for="ygb-avatar"><?php esc_html_e( 'Avatar (emoji o URL de imagen)', 'ygb-bot' ); ?></label></th>
 						<td>
 							<input id="ygb-avatar" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar]" class="regular-text code" value="<?php echo esc_attr( $s['avatar'] ); ?>" />
-							<p class="description"><?php esc_html_e( 'Ej.: 🤖 o https://…/avatar.png', 'ygb-bot' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Ej.: 🖥️ o https://…/avatar.png', 'ygb-bot' ); ?></p>
 						</td>
 					</tr>
 					<tr>

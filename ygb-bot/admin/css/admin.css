@@ -56,10 +56,8 @@
 	padding: 10px 14px;
 }
 .ygb-preview-avatar {
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	background: rgba(255, 255, 255, .25);
+	width: auto;
+	height: auto;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;

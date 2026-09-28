@@ -211,8 +211,8 @@
 		var wrap = document.createElement('div');
 		wrap.className = 'ygb-msg ygb-msg-' + who;
 		var avatar = who === 'bot'
-			? '<span class="ygb-msg-avatar" aria-hidden="true">' + esc(S.avatar || '🤖') + '</span>'
-			: '<span class="ygb-msg-avatar" aria-hidden="true">🙂</span>';
+			? '<span class="ygb-msg-avatar" aria-hidden="true">' + esc(S.avatar || '🖥️') + '</span>'
+			: '<span class="ygb-msg-avatar" aria-hidden="true">👤</span>';
 		wrap.innerHTML = avatar + '<div class="ygb-bubble-body">' + html +
 			'<span class="ygb-msg-time">' + timeNow() + '</span></div>';
 		this.msgs.appendChild(wrap);
