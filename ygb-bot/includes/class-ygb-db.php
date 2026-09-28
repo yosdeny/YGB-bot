@@ -634,7 +634,10 @@ class Class_Ygb_DB {
 	 * @return string
 	 */
 	public static function hash_ip( $ip ) {
-		return 'anon:' . substr( hash( 'sha-256', $ip . wp_salt( 'auth' ) . gmdate( 'Ymd' ) ), 0, 40 );
+		// Se usa el alias 'sha256': el nombre con guion ('sha-256') no está
+		// disponible en todos los builds de PHP y provoca un ValueError fatal
+		// que rompía el endpoint AJAX `ygb_start` (primer mensaje del bot).
+		return 'anon:' . substr( hash( 'sha256', $ip . wp_salt( 'auth' ) . gmdate( 'Ymd' ) ), 0, 40 );
 	}
 
 	/**
