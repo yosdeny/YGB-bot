@@ -192,7 +192,7 @@ class Class_Ygb_DB {
 			'save_history'   => 1,
 			'lazy_load'      => 1,
 			// Derivación / fallback.
-			'fallback_msg'   => __( 'No tengo esa información. ¿Quieres que te comunique con un agente de soporte?', 'ygb-bot' ),
+			'fallback_msg'   => __( 'Elige uno de los métodos para hablar con soporte humano.', 'ygb-bot' ),
 			'dc_email'       => 1,
 			'dc_whatsapp'    => 1,
 			'dc_contact'     => 0,
