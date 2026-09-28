@@ -185,7 +185,7 @@ class Class_Ygb_DB {
 			'bubble_size_mobile'    => 50,
 			'bubble_offset_x_mobile' => 10,
 			'bubble_offset_y_mobile' => 70,
-			'welcome'        => __( '¡Hola! {{user}} 👋 Soy el asistente virtual. Escribe tu pregunta o elige un tema.', 'ygb-bot' ),
+			'welcome'        => __( '¡Hola! 👋 Soy el asistente virtual. Escribe tu pregunta o elige un tema.', 'ygb-bot' ),
 			'placeholder'    => __( 'Escribe tu pregunta aquí…', 'ygb-bot' ),
 			'show_topics'    => 1,
 			'show_faq'       => 1,
@@ -216,128 +216,6 @@ class Class_Ygb_DB {
 			$saved = array();
 		}
 		return array_merge( self::default_settings(), $saved );
-	}
-
-	/**
-	 * Nombre del usuario autenticado actual, vacío si no hay sesión.
-	 *
-	 * Se usa el nombre visible (display_name); si está vacío se prueban el
-	 * apodo (nickname) y el nombre de usuario como alternativas.
-	 *
-	 * @return string
-	 */
-	public static function current_user_name() {
-		$user = wp_get_current_user();
-		if ( ! $user || ! $user->exists() ) {
-			return '';
-		}
-		foreach ( array( $user->display_name, $user->nickname, $user->user_login ) as $candidate ) {
-			$candidate = trim( (string) $candidate );
-			if ( '' !== $candidate ) {
-				return $candidate;
-			}
-		}
-		return '';
-	}
-
-	/**
-	 * Sustituye en un texto las variables dinámicas disponibles.
-	 *
-	 * Variables soportadas:
-	 * - {{user}} / {{usuario}} / {{nombre}} : nombre del usuario autenticado
-	 *   (cadena vacía cuando no hay sesión iniciada).
-	 * - {{site}} / {{sitio}}               : título del sitio.
-	 * - {{bot}}                            : nombre configurado del bot.
-	 *
-	 * Al no haber nombre de usuario (visitante anónimo) la variable simplemente
-	 * desaparece del mensaje, por lo que frases como "¡Hola! {{user}} 👋" se ven
-	 * como "¡Hola! 👋".
-	 *
-	 * @param string $text     Texto con variables (p. ej. el mensaje de bienvenida).
-	 * @param array  $settings Ajustes precalculados (opcional).
-	 * @return string
-	 */
-	public static function replace_variables( $text, $settings = null ) {
-		$text = (string) $text;
-		if ( false === strpos( $text, '{{' ) ) {
-			return $text;
-		}
-
-		if ( null === $settings ) {
-			$settings = self::get_settings();
-		}
-
-		$vars = array(
-			'user'    => self::current_user_name(),
-			'site'    => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'bot'     => isset( $settings['bot_name'] ) ? $settings['bot_name'] : '',
-			'fecha'   => date_i18n( get_option( 'date_format' ) ),
-			'hora'    => date_i18n( get_option( 'time_format' ) ),
-		);
-		// Sinónimos en español de las variables principales.
-		$aliases = array(
-			'usuario' => 'user',
-			'nombre'  => 'user',
-			'name'    => 'user',
-			'sitio'   => 'site',
-			'bot_name' => 'bot',
-			'date'    => 'fecha',
-			'time'    => 'hora',
-		);
-
-		$out = preg_replace_callback(
-			'/\{\{\s*([a-zA-Z0-9_\x80-\xff]+)\s*\}\}/u',
-			static function ( $m ) use ( $vars, $aliases ) {
-				$key = strtolower( $m[1] );
-				if ( isset( $aliases[ $key ] ) ) {
-					$key = $aliases[ $key ];
-				}
-				// Las variables desconocidas se dejan tal cual para no perder texto.
-				return isset( $vars[ $key ] ) ? $vars[ $key ] : $m[0];
-			},
-			$text
-		);
-
-		// Normaliza espacios dobles leftovers ({{user}} vacío entre palabras).
-		$out = preg_replace( '/[ \t]{2,}/u', ' ', (string) $out );
-
-		/**
-		 * Permite añadir o modificar las variables dinámicas del texto.
-		 *
-		 * @param array  $vars     Variables disponibles (clave => valor).
-		 * @param string $original Texto original antes de sustituir.
-		 */
-		$extra = apply_filters( 'ygb_message_variables', $vars, $text );
-
-		if ( $extra !== $vars ) {
-			$out = preg_replace_callback(
-				'/\{\{\s*([a-zA-Z0-9_\x80-\xff]+)\s*\}\}/u',
-				static function ( $m ) use ( $extra, $aliases ) {
-					$key = strtolower( $m[1] );
-					if ( isset( $aliases[ $key ] ) ) {
-						$key = $aliases[ $key ];
-					}
-					return isset( $extra[ $key ] ) ? $extra[ $key ] : $m[0];
-				},
-				$out
-			);
-		}
-
-		return trim( (string) $out );
-	}
-
-	/**
-	 * Devuelve un ajuste concreto aplicando las variables dinámicas al texto.
-	 *
-	 * Útil para mensajes mostrados en el frontend (bienvenida, fallback…).
-	 *
-	 * @param string $key     Clave del ajuste.
-	 * @param mixed  $default Valor por defecto opcional.
-	 * @return mixed
-	 */
-	public static function get_setting_text( $key, $default = null ) {
-		$value = self::get_setting( $key, $default );
-		return is_string( $value ) ? self::replace_variables( $value ) : $value;
 	}
 
 	/**

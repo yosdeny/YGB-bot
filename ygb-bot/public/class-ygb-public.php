@@ -75,18 +75,6 @@ class Class_Ygb_Public {
 
 		$settings = Class_Ygb_DB::get_settings();
 
-		// Nombre del visitante conectado (vacío si no hay sesión). Se usa para
-		// sustituir {{user}} en los mensajes del chat en tiempo de ejecución,
-		// de modo que el HTML cacheado del widget nunca "fija" un nombre.
-		$user_name = Class_Ygb_DB::current_user_name();
-
-		/**
-		 * Filtra el nombre mostrado en los mensajes dinámicos del bot.
-		 *
-		 * @param string $user_name Nombre del usuario autenticado o ''.
-		 */
-		$user_name = (string) apply_filters( 'ygb_user_display_name', $user_name );
-
 		// Variables para el JS (solo datos públicos).
 		wp_localize_script(
 			'ygb-bot',
@@ -113,9 +101,6 @@ class Class_Ygb_Public {
 				'bubbleOffsetYMobile' => absint( $settings['bubble_offset_y_mobile'] ),
 					'welcome'       => $settings['welcome'],
 					'placeholder'   => $settings['placeholder'],
-					// Valores disponibles para las variables {{user}}, {{site}}, {{bot}}.
-					'userName'      => $user_name,
-					'siteName'      => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 					'showTopics'    => (bool) $settings['show_topics'],
 					'showFaq'       => (bool) $settings['show_faq'],
 					'saveHistory'   => (bool) $settings['save_history'],
