@@ -20,23 +20,19 @@
 .ygb-bubble.ygb-hidden{display:none}
 
 /* Ventana */
-/* Nota: los selectores van prefijados con .ygb-widget porque el JS escribe las
-   variables --ygb-* (también las móviles bajo @media) como estilos inline en
-   .ygb-widget; si estas reglas no tuvieran el mismo prefijo ganarían por
-   cascada y el botón/ventana ignorarían el tamaño y posición configurados. */
-.ygb-widget .ygb-window{position:fixed;z-index:99999;display:flex;flex-direction:column;background:#fff;color:#1d2327;border-radius:var(--ygb-radius);box-shadow:0 12px 48px rgba(0,0,0,.28);overflow:hidden;height:min(70vh,520px)}
+.ygb-window{position:fixed;z-index:99999;display:flex;flex-direction:column;background:#fff;color:#1d2327;border-radius:var(--ygb-radius);box-shadow:0 12px 48px rgba(0,0,0,.28);overflow:hidden;height:min(70vh,520px)}
 .ygb-window[hidden]{display:none}
-.ygb-widget.ygb-pos-right .ygb-window{right:var(--ygb-bubble-offset-x,20px);bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);left:auto}
-.ygb-widget.ygb-pos-left .ygb-window{left:var(--ygb-bubble-offset-x,20px);bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);right:auto}
+.ygb-pos-right .ygb-window{right:var(--ygb-bubble-offset-x,20px);bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);left:auto}
+.ygb-pos-left .ygb-window{left:var(--ygb-bubble-offset-x,20px);bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);right:auto}
 @media (max-width:768px){
-  .ygb-widget.ygb-pos-right .ygb-window,.ygb-widget.ygb-pos-left .ygb-window{left:8px;right:8px;bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);height:72vh}
+  .ygb-pos-right .ygb-window,.ygb-pos-left .ygb-window{left:8px;right:8px;bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);height:72vh}
 }
 .ygb-inline .ygb-window{position:relative;inset:auto;height:460px;width:100%;max-width:420px;border:1px solid #dcdcde;margin:0 auto}
 
 /* Ancho de la ventana según el desplegable "Tamaño" (solo afecta a la ventana,
    nunca al botón flotante: ese se controla con "Tamaño del icono (px)") */
 .ygb-floating .ygb-window{width:min(var(--ygb-win-width,360px),calc(100vw - var(--ygb-bubble-offset-x,20px)*2));max-width:calc(100vw - var(--ygb-bubble-offset-x,20px)*2)}
-@media (max-width:768px){.ygb-widget .ygb-window{width:auto!important}}
+@media (max-width:768px){.ygb-window{width:auto!important}}
 
 /* Cabecera */
 .ygb-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--ygb-color,#2271b1);color:#fff}
