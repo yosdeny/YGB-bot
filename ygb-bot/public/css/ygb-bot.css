@@ -81,7 +81,9 @@
 .ygb-quick-body[hidden]{display:none}
 .ygb-chip{border:1px solid var(--ygb-color,#2271b1);color:var(--ygb-color,#2271b1);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;transition:background .12s}
 .ygb-chip:hover,.ygb-chip:focus-visible{background:var(--ygb-color,#2271b1);color:#fff;outline:2px solid transparent}
-.ygb-quick-label{width:100%;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970;margin-bottom:2px}
+.ygb-quick-label{width:100%;display:block;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Fila con los botones de canal (correo / WhatsApp) bajo la etiqueta de soporte. */
+.ygb-support-row{display:flex;flex-wrap:wrap;gap:6px;width:100%}
 
 /* Pie / formulario */
 .ygb-footer{border-top:1px solid #e3e5e7;background:#fff;padding:8px 10px 10px}

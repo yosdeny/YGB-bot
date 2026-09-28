@@ -54,14 +54,16 @@ class Class_Ygb_Fallback {
 	}
 
 	/**
-	 * Construye la respuesta de fallback (sin consultar).
+	 * Canales de soporte humano configurados (correo, WhatsApp, contacto, ticket).
 	 *
-	 * @param array $suggest Sugerencias del motor de búsqueda.
-	 * @return array Respuesta para el front-end.
+	 * Se reutiliza tanto en el fallback automático como en el botón persistente
+	 * "Hablar con soporte" del widget.
+	 *
+	 * @return array<int,array<string,string>>
 	 */
-	public static function build_response( $suggest = array() ) {
-		$settings  = Class_Ygb_DB::get_settings();
-		$channels  = array();
+	public static function support_channels() {
+		$settings = Class_Ygb_DB::get_settings();
+		$channels = array();
 
 		if ( ! empty( $settings['dc_email'] ) && ! empty( $settings['support_email'] ) ) {
 			$channels[] = array(
@@ -71,7 +73,7 @@ class Class_Ygb_Fallback {
 			);
 		}
 		if ( ! empty( $settings['dc_whatsapp'] ) && ! empty( $settings['whatsapp'] ) ) {
-			$number    = preg_replace( '/\D+/', '', $settings['whatsapp'] );
+			$number     = preg_replace( '/\D+/', '', $settings['whatsapp'] );
 			$channels[] = array(
 				'id'   => 'whatsapp',
 				'text' => __( '📱 WhatsApp', 'ygb-bot' ),
@@ -92,6 +94,28 @@ class Class_Ygb_Fallback {
 				'action' => 'ticket',
 			);
 		}
+
+		return $channels;
+	}
+
+	/**
+	 * Mensaje que se muestra al ofrecer los canales de soporte humano.
+	 *
+	 * @return string
+	 */
+	public static function support_message() {
+		return Class_Ygb_DB::get_setting( 'fallback_msg' );
+	}
+
+	/**
+	 * Construye la respuesta de fallback (sin consultar).
+	 *
+	 * @param array $suggest Sugerencias del motor de búsqueda.
+	 * @return array Respuesta para el front-end.
+	 */
+	public static function build_response( $suggest = array() ) {
+		$settings  = Class_Ygb_DB::get_settings();
+		$channels = self::support_channels();
 
 		$suggestions = array();
 		foreach ( (array) $suggest as $s ) {

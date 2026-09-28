@@ -75,6 +75,7 @@
 		this.fails = 0;
 		this.started = false;
 		this.history = []; // transcript local [{emisor,mensaje}]
+		this.lastChannels = null;
 
 		this.bind();
 		if (!this.inline) { this.applyBubblePlacement(); }
@@ -427,36 +428,55 @@
 		$all('.ygb-suggest-box', this.root).forEach(function (el) { el.remove(); });
 	};
 
+	// Etiqueta "Hablar con soporte" en una línea y, debajo, los botones
+	// de canales (correo / WhatsApp) en su propia fila.
 	YgbWidget.prototype.renderChannels = function (channels) {
 		var self = this;
+		this.lastChannels = channels;
 		this.clearSuggestions();
 		var box = document.createElement('div');
 		box.className = 'ygb-quick ygb-suggest-box';
-		box.innerHTML = '<span class="ygb-quick-label">' + esc(I18N.support || 'Soporte') + '</span>';
+		box.innerHTML = '<span class="ygb-quick-label">' + esc(I18N.support || '💬 Hablar con soporte') + '</span>';
+		var row = document.createElement('div');
+		row.className = 'ygb-support-row';
+		box.appendChild(row);
 		channels.forEach(function (c) {
 			var b = document.createElement('button');
 			b.type = 'button';
 			b.className = 'ygb-chip';
 			b.textContent = c.text;
 			b.addEventListener('click', function () { self.derive(c); });
-			box.appendChild(b);
+			row.appendChild(b);
 		});
 		this.msgs.parentNode.insertBefore(box, this.msgs.nextSibling);
 	};
 
+	// Muestra las opciones de soporte humano. No hace falta enviar un mensaje
+	// al servidor: se reutilizan los canales ya recibidos en la conversación o,
+	// si aún no hay ninguno, los que el plugin exporta en la configuración.
 	YgbWidget.prototype.showSupport = function () {
 		var self = this;
+		this.addMsg('bot', '<p>' + esc(I18N.supportMsg || 'Elige uno de los métodos para hablar con soporte humano.') + '</p>');
+
+		var finish = function (channels) {
+			if (channels && channels.length) {
+				self.renderChannels(channels);
+			} else {
+				self.addMsg('bot', '<p>' + esc(I18N.noChannels || 'Ahora mismo no hay canales de soporte disponibles.') + '</p>');
+			}
+		};
+
+		if (this.lastChannels && this.lastChannels.length) { finish(this.lastChannels); return; }
+		if (S.supportChannels && S.supportChannels.length) { finish(S.supportChannels); return; }
+
 		post('ygb_chat', {
 			message: 'agente de soporte',
 			conv_id: this.convId,
 			fails: this.fails,
 			transcript: this.transcript()
 		}).then(function (res) {
-			if (res && res.success && res.data.channels) {
-				self.addMsg('bot', '<p>' + esc(res.data.message || '') + '</p>');
-				self.renderChannels(res.data.channels);
-			}
-		});
+			finish(res && res.success && res.data.channels ? res.data.channels : []);
+		}).catch(function () { finish([]); });
 	};
 
 	YgbWidget.prototype.derive = function (channel) {

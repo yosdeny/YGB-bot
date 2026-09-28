@@ -77,7 +77,7 @@ msgstr ""
 msgid "Escribe tu pregunta aquí…"
 msgstr ""
 
-msgid "No tengo esa información. ¿Quieres que te comunique con un agente de soporte?"
+msgid "Elige uno de los métodos para hablar con soporte humano."
 msgstr ""
 
 msgid "En línea"

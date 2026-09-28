@@ -110,10 +110,15 @@ class Class_Ygb_Public {
 					'storeChats'    => (bool) $settings['store_chats'],
 					'privacyUrl'    => $settings['privacy_url'],
 					'consentText'   => __( 'Al continuar aceptas que esta conversación pueda guardarse para mejorar el servicio. Consulta nuestra política de privacidad.', 'ygb-bot' ),
+					// Canales de soporte (correo/WhatsApp/etc.) para que el botón
+					// persistente "Hablar con soporte" funcione sin consulta AJAX.
+					'supportChannels' => Class_Ygb_Fallback::support_channels(),
 					'i18n'          => array(
 						'online'        => __( 'En línea', 'ygb-bot' ),
 						'typing'        => __( 'escribiendo…', 'ygb-bot' ),
 						'support'       => __( '💬 Hablar con soporte', 'ygb-bot' ),
+						'supportMsg'     => Class_Ygb_Fallback::support_message(),
+						'noChannels'    => __( 'Ahora mismo no hay canales de soporte disponibles.', 'ygb-bot' ),
 						'send'          => __( 'Enviar', 'ygb-bot' ),
 						'openChat'      => __( 'Abrir chat', 'ygb-bot' ),
 						'closeChat'     => __( 'Minimizar chat', 'ygb-bot' ),
