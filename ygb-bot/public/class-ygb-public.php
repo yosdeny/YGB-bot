@@ -92,7 +92,7 @@ class Class_Ygb_Public {
 					'bubbleLogoSize' => max( 30, min( 100, absint( $settings['bubble_logo_size'] ) ) ),
 					'bubbleColor'       => Class_Ygb_DB::sanitize_hex( $settings['bubble_color'], '#25d366' ),
 					'bubbleColorHover'  => Class_Ygb_DB::sanitize_hex( $settings['bubble_color_hover'], '#128c7e' ),
-					'size'          => max( 30, min( 100, absint( $settings['size'] ) ) ),
+					'size'          => $settings['size'],
 				'bubbleSize'    => absint( $settings['bubble_size'] ),
 				'bubbleOffsetX' => absint( $settings['bubble_offset_x'] ),
 				'bubbleOffsetY' => absint( $settings['bubble_offset_y'] ),
