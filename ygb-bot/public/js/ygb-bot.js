@@ -82,43 +82,28 @@
 		if (this.inline) { this.open(); }
 	}
 
-	/* Aplica tamaño y desplazamiento de la burbuja (escritorio/móvil, breakpoint 768px) */
+	/* Ajustes estáticos del widget (logo, colores, clase de tamaño de ventana).
+	   El tamaño y desplazamiento del botón NO se fijan aquí por JS: los aplica
+	   el CSS (variables en :root, con su propio @media de móvil) para que el
+	   breakpoint responda también a giros de pantalla sin depender de este código. */
 	YgbWidget.prototype.applyBubblePlacement = function () {
-		var self = this;
-		function apply() {
-			var mobile = window.matchMedia && window.matchMedia('(max-width:768px)').matches;
-			var size   = mobile ? S.bubbleSizeMobile : S.bubbleSize;
-			var offX   = mobile ? S.bubbleOffsetXMobile : S.bubbleOffsetX;
-			var offY   = mobile ? S.bubbleOffsetYMobile : S.bubbleOffsetY;
-			if (size == null || isNaN(size)) { return; }
-			self.root.style.setProperty('--ygb-bubble-size', parseInt(size, 10) + 'px');
-			self.root.style.setProperty('--ygb-bubble-offset-x', (isNaN(offX) ? 20 : parseInt(offX, 10)) + 'px');
-			self.root.style.setProperty('--ygb-bubble-offset-y', (isNaN(offY) ? 20 : parseInt(offY, 10)) + 'px');
-			// Escala del logo dentro del botón (30-100% del diámetro).
-			if (S.bubbleLogoSize != null && !isNaN(S.bubbleLogoSize)) {
-				var scale = Math.max(30, Math.min(100, parseInt(S.bubbleLogoSize, 10))) / 100;
-				self.root.style.setProperty('--ygb-bubble-logo-scale', String(scale));
-			}
-			// Tamaño de la ventana del chat: small|medium|large => ancho 300/360/420 px.
-			// No afecta al botón flotante (ese se controla con "Tamaño del icono (px)").
-			if ( S.size ) {
-				var winWidths = { small: '300px', medium: '360px', large: '420px' };
-				self.root.classList.remove( 'ygb-size-small', 'ygb-size-medium', 'ygb-size-large' );
-				self.root.classList.add( 'ygb-size-' + ( winWidths[ S.size ] ? S.size : 'medium' ) );
-				self.win.style.setProperty('--ygb-win-width', winWidths[ S.size ] || '360px');
-			}
-			// Colores del botón flotante.
-			if (S.bubbleColor) { self.root.style.setProperty('--ygb-bubble-color', S.bubbleColor); }
-			if (S.bubbleColorHover) { self.root.style.setProperty('--ygb-bubble-color-hover', S.bubbleColorHover); }
+		// Escala del logo dentro del botón (30-100% del diámetro).
+		if (S.bubbleLogoSize != null && !isNaN(S.bubbleLogoSize)) {
+			var scale = Math.max(30, Math.min(100, parseInt(S.bubbleLogoSize, 10))) / 100;
+			this.root.style.setProperty('--ygb-bubble-logo-scale', String(scale));
 		}
-		apply();
-		if (window.matchMedia) {
-			var mq = window.matchMedia('(max-width:768px)');
-			if (mq.addEventListener) { mq.addEventListener('change', apply); }
-			else if (mq.addListener) { mq.addListener(apply); }
-		} else {
-			window.addEventListener('resize', apply);
+		// Tamaño de la ventana del chat: small|medium|large => ancho 300/360/420 px.
+		// Se aplica vía clase en el nodo raíz (heredan las variables de .ygb-widget
+		// y las reglas de :root); no afecta al botón flotante, que se controla
+		// con "Tamaño del icono (px)".
+		if (S.size) {
+			var winWidths = { small: 1, medium: 1, large: 1 };
+			this.root.classList.remove('ygb-size-small', 'ygb-size-medium', 'ygb-size-large');
+			this.root.classList.add('ygb-size-' + (winWidths[S.size] ? S.size : 'medium'));
 		}
+		// Colores del botón flotante.
+		if (S.bubbleColor) { this.root.style.setProperty('--ygb-bubble-color', S.bubbleColor); }
+		if (S.bubbleColorHover) { this.root.style.setProperty('--ygb-bubble-color-hover', S.bubbleColorHover); }
 	};
 
 	YgbWidget.prototype.loadSession = function () {
