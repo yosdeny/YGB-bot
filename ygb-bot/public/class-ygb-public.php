@@ -89,6 +89,12 @@ class Class_Ygb_Public {
 					'color'         => $settings['color'],
 					'bubbleIcon'    => $settings['bubble_icon'],
 					'size'          => $settings['size'],
+				'bubbleSize'    => absint( $settings['bubble_size'] ),
+				'bubbleOffsetX' => absint( $settings['bubble_offset_x'] ),
+				'bubbleOffsetY' => absint( $settings['bubble_offset_y'] ),
+				'bubbleSizeMobile'    => absint( $settings['bubble_size_mobile'] ),
+				'bubbleOffsetXMobile' => absint( $settings['bubble_offset_x_mobile'] ),
+				'bubbleOffsetYMobile' => absint( $settings['bubble_offset_y_mobile'] ),
 					'welcome'       => $settings['welcome'],
 					'placeholder'   => $settings['placeholder'],
 					'showTopics'    => (bool) $settings['show_topics'],
@@ -119,9 +125,18 @@ class Class_Ygb_Public {
 
 		// Variables CSS de marca en inline (barato y cacheable por página).
 		$custom_css = sprintf(
-			':root{--ygb-color:%1$s;--ygb-color-dark:%2$s;}',
+			':root{--ygb-color:%1$s;--ygb-color-dark:%2$s;--ygb-bubble-size:%3$dpx;--ygb-bubble-offset-x:%4$dpx;--ygb-bubble-offset-y:%5$dpx;}',
 			Class_Ygb_DB::sanitize_hex( $settings['color'] ),
-			self::darken_hex( $settings['color'] )
+			self::darken_hex( $settings['color'] ),
+			absint( $settings['bubble_size'] ),
+			absint( $settings['bubble_offset_x'] ),
+			absint( $settings['bubble_offset_y'] )
+		);
+		$custom_css .= sprintf(
+			'@media (max-width:768px){:root{--ygb-bubble-size:%1$dpx;--ygb-bubble-offset-x:%2$dpx;--ygb-bubble-offset-y:%3$dpx;}}',
+			absint( $settings['bubble_size_mobile'] ),
+			absint( $settings['bubble_offset_x_mobile'] ),
+			absint( $settings['bubble_offset_y_mobile'] )
 		);
 		wp_add_inline_style( 'ygb-bot', $custom_css );
 	}

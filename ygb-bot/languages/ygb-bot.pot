@@ -97,3 +97,48 @@ msgstr ""
 
 msgid "¿Quisiste decir?"
 msgstr ""
+
+msgid "Ajustes de escritorio"
+msgstr ""
+
+msgid "Tamaño del icono (px)"
+msgstr ""
+
+msgid "Diámetro del botón en escritorio (30-120px)"
+msgstr ""
+
+msgid "Desplazamiento horizontal (px)"
+msgstr ""
+
+msgid "Distancia desde el borde izquierdo/derecho en escritorio"
+msgstr ""
+
+msgid "Desplazamiento vertical (px)"
+msgstr ""
+
+msgid "Distancia desde el borde inferior en escritorio"
+msgstr ""
+
+msgid "Ajustes móviles"
+msgstr ""
+
+msgid "Estos ajustes se aplican cuando el ancho de pantalla es de 768px o menos"
+msgstr ""
+
+msgid "Tamaño del icono (px) - Móvil"
+msgstr ""
+
+msgid "Diámetro del botón en móvil (30-100px)"
+msgstr ""
+
+msgid "Desplazamiento horizontal (px) - Móvil"
+msgstr ""
+
+msgid "Distancia desde el borde izquierdo/derecho en móvil"
+msgstr ""
+
+msgid "Desplazamiento vertical (px) - Móvil"
+msgstr ""
+
+msgid "Distancia desde el borde inferior en móvil"
+msgstr ""

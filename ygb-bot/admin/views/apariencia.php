@@ -56,6 +56,56 @@ $s = Class_Ygb_DB::get_settings();
 						<td><input id="ygb-bubble-icon" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_icon]" class="small-text code" maxlength="8" value="<?php echo esc_attr( $s['bubble_icon'] ); ?>" /></td>
 					</tr>
 					<tr>
+						<tr>
+							<th colspan="2" scope="rowgroup"><h2 class="title" style="margin-top:0"><?php esc_html_e( 'Ajustes de escritorio', 'ygb-bot' ); ?></h2></th>
+						</tr>
+						<tr>
+							<th scope="row"><label for="ygb-bubble-size"><?php esc_html_e( 'Tamaño del icono (px)', 'ygb-bot' ); ?></label></th>
+							<td>
+								<input id="ygb-bubble-size" type="number" min="30" max="120" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_size]" value="<?php echo esc_attr( $s['bubble_size'] ); ?>" />
+								<p class="description"><?php esc_html_e( 'Diámetro del botón en escritorio (30-120px)', 'ygb-bot' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="ygb-bubble-offset-x"><?php esc_html_e( 'Desplazamiento horizontal (px)', 'ygb-bot' ); ?></label></th>
+							<td>
+								<input id="ygb-bubble-offset-x" type="number" min="0" max="500" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_offset_x]" value="<?php echo esc_attr( $s['bubble_offset_x'] ); ?>" />
+								<p class="description"><?php esc_html_e( 'Distancia desde el borde izquierdo/derecho en escritorio', 'ygb-bot' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="ygb-bubble-offset-y"><?php esc_html_e( 'Desplazamiento vertical (px)', 'ygb-bot' ); ?></label></th>
+							<td>
+								<input id="ygb-bubble-offset-y" type="number" min="0" max="500" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_offset_y]" value="<?php echo esc_attr( $s['bubble_offset_y'] ); ?>" />
+								<p class="description"><?php esc_html_e( 'Distancia desde el borde inferior en escritorio', 'ygb-bot' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2" scope="rowgroup"><h2 class="title" style="margin-top:0"><?php esc_html_e( 'Ajustes móviles', 'ygb-bot' ); ?></h2>
+								<p class="description"><?php esc_html_e( 'Estos ajustes se aplican cuando el ancho de pantalla es de 768px o menos', 'ygb-bot' ); ?></p>
+							</th>
+						</tr>
+						<tr>
+							<th scope="row"><label for="ygb-bubble-size-mobile"><?php esc_html_e( 'Tamaño del icono (px) - Móvil', 'ygb-bot' ); ?></label></th>
+							<td>
+								<input id="ygb-bubble-size-mobile" type="number" min="30" max="100" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_size_mobile]" value="<?php echo esc_attr( $s['bubble_size_mobile'] ); ?>" />
+								<p class="description"><?php esc_html_e( 'Diámetro del botón en móvil (30-100px)', 'ygb-bot' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="ygb-bubble-offset-x-mobile"><?php esc_html_e( 'Desplazamiento horizontal (px) - Móvil', 'ygb-bot' ); ?></label></th>
+							<td>
+								<input id="ygb-bubble-offset-x-mobile" type="number" min="0" max="300" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_offset_x_mobile]" value="<?php echo esc_attr( $s['bubble_offset_x_mobile'] ); ?>" />
+								<p class="description"><?php esc_html_e( 'Distancia desde el borde izquierdo/derecho en móvil', 'ygb-bot' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="ygb-bubble-offset-y-mobile"><?php esc_html_e( 'Desplazamiento vertical (px) - Móvil', 'ygb-bot' ); ?></label></th>
+							<td>
+								<input id="ygb-bubble-offset-y-mobile" type="number" min="0" max="500" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_offset_y_mobile]" value="<?php echo esc_attr( $s['bubble_offset_y_mobile'] ); ?>" />
+								<p class="description"><?php esc_html_e( 'Distancia desde el borde inferior en móvil', 'ygb-bot' ); ?></p>
+							</td>
+						</tr>
 						<th scope="row"><label for="ygb-welcome"><?php esc_html_e( 'Mensaje de bienvenida', 'ygb-bot' ); ?></label></th>
 						<td><textarea id="ygb-welcome" rows="3" class="large-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[welcome]"><?php echo esc_textarea( $s['welcome'] ); ?></textarea></td>
 					</tr>
