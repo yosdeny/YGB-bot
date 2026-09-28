@@ -75,9 +75,33 @@
 		this.history = []; // transcript local [{emisor,mensaje}]
 
 		this.bind();
+		if (!this.inline) { this.applyBubblePlacement(); }
 		if (!this.inline && S.lazyLoad === false) { /* nada que precargar */ }
 		if (this.inline) { this.open(); }
 	}
+
+	/* Aplica tamaño y desplazamiento de la burbuja (escritorio/móvil, breakpoint 768px) */
+	YgbWidget.prototype.applyBubblePlacement = function () {
+		var self = this;
+		function apply() {
+			var mobile = window.matchMedia && window.matchMedia('(max-width:768px)').matches;
+			var size   = mobile ? S.bubbleSizeMobile : S.bubbleSize;
+			var offX   = mobile ? S.bubbleOffsetXMobile : S.bubbleOffsetX;
+			var offY   = mobile ? S.bubbleOffsetYMobile : S.bubbleOffsetY;
+			if (size == null || isNaN(size)) { return; }
+			self.root.style.setProperty('--ygb-bubble-size', parseInt(size, 10) + 'px');
+			self.root.style.setProperty('--ygb-bubble-offset-x', (isNaN(offX) ? 20 : parseInt(offX, 10)) + 'px');
+			self.root.style.setProperty('--ygb-bubble-offset-y', (isNaN(offY) ? 20 : parseInt(offY, 10)) + 'px');
+		}
+		apply();
+		if (window.matchMedia) {
+			var mq = window.matchMedia('(max-width:768px)');
+			if (mq.addEventListener) { mq.addEventListener('change', apply); }
+			else if (mq.addListener) { mq.addListener(apply); }
+		} else {
+			window.addEventListener('resize', apply);
+		}
+	};
 
 	YgbWidget.prototype.loadSession = function () {
 		var id = '';

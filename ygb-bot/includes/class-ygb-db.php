@@ -50,6 +50,12 @@ class Class_Ygb_DB {
 			'position',
 			'bubble_icon',
 			'size',
+			'bubble_size',
+			'bubble_offset_x',
+			'bubble_offset_y',
+			'bubble_size_mobile',
+			'bubble_offset_x_mobile',
+			'bubble_offset_y_mobile',
 			'welcome',
 			'placeholder',
 			'show_topics',
@@ -159,6 +165,14 @@ class Class_Ygb_DB {
 			'color'          => '#2271b1',
 			'bubble_icon'    => '💬',
 			'size'           => 'medium',
+			// Posición de la burbuja (escritorio).
+			'bubble_size'    => 50,
+			'bubble_offset_x' => 20,
+			'bubble_offset_y' => 70,
+			// Posición de la burbuja (móvil, <=768px).
+			'bubble_size_mobile'    => 50,
+			'bubble_offset_x_mobile' => 10,
+			'bubble_offset_y_mobile' => 70,
 			'welcome'        => __( '¡Hola! 👋 Soy el asistente virtual. Escribe tu pregunta o elige un tema.', 'ygb-bot' ),
 			'placeholder'    => __( 'Escribe tu pregunta aquí…', 'ygb-bot' ),
 			'show_topics'    => 1,
@@ -258,6 +272,21 @@ class Class_Ygb_DB {
 		}
 
 		$out['threshold'] = $is_present( 'threshold' ) ? max( 1, min( 100, absint( $input['threshold'] ) ) ) : $out['threshold'];
+
+		// Diámetro y desplazamientos de la burbuja flotante (px).
+		$bubble_ranges = array(
+			'bubble_size'            => array( 30, 120 ),
+			'bubble_offset_x'        => array( 0, 500 ),
+			'bubble_offset_y'        => array( 0, 500 ),
+			'bubble_size_mobile'     => array( 30, 100 ),
+			'bubble_offset_x_mobile' => array( 0, 300 ),
+			'bubble_offset_y_mobile' => array( 0, 500 ),
+		);
+		foreach ( $bubble_ranges as $bkey => $brange ) {
+			if ( $is_present( $bkey ) ) {
+				$out[ $bkey ] = max( $brange[0], min( $brange[1], absint( $input[ $bkey ] ) ) );
+			}
+		}
 		$out['color']     = $is_present( 'color' ) ? self::sanitize_hex( $input['color'], $out['color'] ) : $out['color'];
 		$out['avatar']    = $is_present( 'avatar' ) ? mb_substr( sanitize_text_field( wp_unslash( $input['avatar'] ) ), 0, 32 ) : $out['avatar'];
 
