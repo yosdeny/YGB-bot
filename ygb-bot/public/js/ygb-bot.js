@@ -67,6 +67,8 @@
 		this.input = $('.ygb-input', root);
 		this.consentBox = $('.ygb-consent', root);
 		this.supportBtn = $('.ygb-support-persist', root);
+		this.quickToggle = $('.ygb-quick-toggle', root);
+		this.quickBody = $('.ygb-quick-body', root);
 
 		this.session = this.loadSession();
 		this.convId = 0;
@@ -167,6 +169,13 @@
 				self.start();
 			});
 		}
+		// Plegar/expandir el panel de "Menú inicial de temas y FAQ sugeridas".
+		if (this.quickToggle && this.quickBody) {
+			this.quickToggle.addEventListener('click', function () {
+				self.setQuickCollapsed(!self.isQuickCollapsed());
+			});
+			this.applyQuickCollapse();
+		}
 	};
 
 	YgbWidget.prototype.open = function () {
@@ -223,6 +232,15 @@
 
 	YgbWidget.prototype.renderQuick = function (data) {
 		var self = this;
+		// Reconstruye el panel conservando el encabezado con el botón plegar/expandir.
+		var head = this.quick.querySelector('.ygb-quick-head');
+		this.quick.innerHTML = '';
+		if (head) { this.quick.appendChild(head); }
+		var body = this.quickBody || document.createElement('div');
+		body.className = 'ygb-quick-body';
+		if (body.id !== 'ygb-quick-body') { body.id = 'ygb-quick-body'; }
+		this.quick.appendChild(body);
+		this.quickBody = body;
 		var html = '';
 		if (S.showTopics && data.temas && data.temas.length) {
 			html += '<span class="ygb-quick-label">' + esc(I18N.topicsTitle) + '</span>';
@@ -238,13 +256,41 @@
 					esc(f.pregunta) + '</button>';
 			});
 		}
-		this.quick.innerHTML = html;
+		this.quickBody.innerHTML = html;
 		this.quick.hidden = !html;
+		// El encabezado con el botón plegar/expandir solo tiene sentido si hay contenido.
+		if (head) { head.hidden = !html; }
+		this.applyQuickCollapse();
 		$all('.ygb-chip-topic,.ygb-chip-faq', this.quick).forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				self.ask(null, parseInt(btn.getAttribute('data-id'), 10));
 			});
 		});
+	};
+
+	/* Panel de temas/FAQ: plegado persistido en localStorage (sin auto-plegado inicial). */
+	YgbWidget.prototype.isQuickCollapsed = function () {
+		try {
+			return localStorage.getItem('ygb_quick_collapsed') === '1';
+		} catch (e) { /* noop */ }
+		return false;
+	};
+
+	YgbWidget.prototype.applyQuickCollapse = function () {
+		if (!this.quickToggle || !this.quickBody) { return; }
+		var collapsed = this.isQuickCollapsed();
+		this.quickBody.hidden = collapsed;
+		this.quick.classList.toggle('ygb-quick-collapsed', collapsed);
+		this.quickToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+		var ind = this.quickToggle.querySelector('.ygb-quick-indicator');
+		if (ind) { ind.textContent = collapsed ? '▸' : '▾'; }
+	};
+
+	YgbWidget.prototype.setQuickCollapsed = function (collapsed) {
+		try {
+			localStorage.setItem('ygb_quick_collapsed', collapsed ? '1' : '0');
+		} catch (e) { /* noop */ }
+		this.applyQuickCollapse();
 	};
 
 	YgbWidget.prototype.addMsg = function (who, html, skipSave) {

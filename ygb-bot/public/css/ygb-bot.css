@@ -71,7 +71,14 @@
 @keyframes ygb-blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
 /* Botones rápidos / chips */
-.ygb-quick{padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid #eee;background:#fff}
+.ygb-quick{padding:8px 12px;border-top:1px solid #eee;background:#fff}
+.ygb-quick-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+.ygb-quick-title{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970}
+.ygb-quick-toggle{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:22px;padding:2px 6px;border:1px solid transparent;border-radius:6px;background:transparent;color:#646970;font-size:12px;line-height:1;cursor:pointer;transition:background .12s,color .12s}
+.ygb-quick-toggle:hover,.ygb-quick-toggle:focus-visible{background:#f0f0f1;color:#1d2327;outline:2px solid transparent}
+.ygb-quick-indicator{font-size:11px;line-height:1}
+.ygb-quick-body{display:flex;flex-wrap:wrap;gap:6px}
+.ygb-quick-body[hidden]{display:none}
 .ygb-chip{border:1px solid var(--ygb-color,#2271b1);color:var(--ygb-color,#2271b1);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;transition:background .12s}
 .ygb-chip:hover,.ygb-chip:focus-visible{background:var(--ygb-color,#2271b1);color:#fff;outline:2px solid transparent}
 .ygb-quick-label{width:100%;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970;margin-bottom:2px}
@@ -94,6 +101,9 @@
 .ygb-dark .ygb-typing{background:#2c3338;border-color:#3c434a;color:#c3c4c7}
 .ygb-dark .ygb-quick,.ygb-dark .ygb-footer{background:#1d2327;border-color:#3c434a}
 .ygb-dark .ygb-chip{background:transparent;color:#8ab1d9}
+.ygb-dark .ygb-quick-toggle{color:#c3c4c7}
+.ygb-dark .ygb-quick-toggle:hover,.ygb-dark .ygb-quick-toggle:focus-visible{background:#2c3338;color:#e3e5e7}
+.ygb-dark .ygb-quick-title{color:#c3c4c7}
 .ygb-dark .ygb-input{background:#2c3338;border-color:#3c434a;color:#e3e5e7}
 .ygb-dark .ygb-support-persist{background:#2c3338;color:#8ab1d9}
 
