@@ -66,6 +66,7 @@
 		this.form = $('.ygb-input-row', root);
 		this.input = $('.ygb-input', root);
 		this.consentBox = $('.ygb-consent', root);
+		this.supportBtn = $('.ygb-support-persist', root);
 		this.quickToggle = $('.ygb-quick-toggle', root);
 		this.quickBody = $('.ygb-quick-body', root);
 
@@ -148,6 +149,9 @@
 				ev.preventDefault();
 				self.send(self.input.value.trim());
 			});
+		}
+		if (this.supportBtn) {
+			this.supportBtn.addEventListener('click', function () { self.showSupport(); });
 		}
 		var ok = $('.ygb-consent-ok', this.root);
 		var no = $('.ygb-consent-no', this.root);
@@ -447,12 +451,9 @@
 		this.msgs.parentNode.insertBefore(box, this.msgs.nextSibling);
 	};
 
-	// Muestra las opciones de soporte humano DENTRO del propio canal de texto. Se invoca
-	// desde el flujo normal de la conversación (intención "humano/agente/soporte" o tras
-	// varios intentos fallidos, ver handleResponse); ya no existe ningún botón persistente
-	// en el pie del widget que abra una ventana aparte.
-	// No hace falta enviar un mensaje al servidor: se reutilizan los canales ya recibidos
-	// en la conversación o, si aún no hay ninguno, los que el plugin exporta en la configuración.
+	// Muestra las opciones de soporte humano. No hace falta enviar un mensaje
+	// al servidor: se reutilizan los canales ya recibidos en la conversación o,
+	// si aún no hay ninguno, los que el plugin exporta en la configuración.
 	YgbWidget.prototype.showSupport = function () {
 		var self = this;
 		this.addMsg('bot', '<p>' + esc(I18N.supportMsg || 'Elige uno de los métodos para hablar con soporte humano.') + '</p>');

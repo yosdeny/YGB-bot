@@ -74,9 +74,19 @@ $ygb_size  = in_array( $ygb_settings['size'], array( 'small', 'medium', 'large' 
 		</div>
 
 		<footer class="ygb-footer">
-			<?php // Ya no se pinta ningún bloque persistente de "Hablar con soporte" en el pie:
-			// la atención humana se ofrece dentro del mismo canal de texto, cuando el usuario
-			// la pide o tras varios intentos fallidos (Class_Ygb_Fallback + renderChannels en el JS). ?>
+			<?php if ( ! empty( $ygb_settings['show_support_btn'] ) ) : ?>
+			<div class="ygb-support-persist-wrap">
+				<span class="ygb-support-persist-label">💬 <?php esc_html_e( 'Hablar con soporte', 'ygb-bot' ); ?></span>
+				<div class="ygb-support-persist-row">
+					<button type="button" class="ygb-support-persist ygb-support-opt" data-channel="email" title="<?php esc_attr_e( 'Enviar un correo al equipo de soporte', 'ygb-bot' ); ?>">
+						✉️ <?php esc_html_e( 'Correo', 'ygb-bot' ); ?>
+					</button>
+					<button type="button" class="ygb-support-persist ygb-support-opt" data-channel="whatsapp" title="<?php esc_attr_e( 'Hablar por WhatsApp', 'ygb-bot' ); ?>">
+						📱 <?php esc_html_e( 'WhatsApp', 'ygb-bot' ); ?>
+					</button>
+				</div>
+			</div>
+			<?php endif; ?>
 			<form class="ygb-input-row">
 				<label class="screen-reader-text ygb-sr-only" for="ygb-input-msg"><?php esc_html_e( 'Escribe tu mensaje', 'ygb-bot' ); ?></label>
 				<input type="text" id="ygb-input-msg" class="ygb-input" autocomplete="off"
