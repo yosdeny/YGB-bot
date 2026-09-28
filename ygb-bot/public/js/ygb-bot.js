@@ -97,11 +97,13 @@
 				var scale = Math.max(30, Math.min(100, parseInt(S.bubbleLogoSize, 10))) / 100;
 				self.root.style.setProperty('--ygb-bubble-logo-scale', String(scale));
 			}
-			// Tamaño del botón: escala en porcentaje (30-100) sobre su diámetro
-			// base; 100% cubre todo el área del botón. No afecta a la ventana.
-			if (S.size != null && !isNaN(S.size)) {
-				var pct = Math.max(30, Math.min(100, parseInt(S.size, 10)));
-				self.root.style.setProperty('--ygb-btn-scale', String(pct / 100));
+			// Tamaño de la ventana del chat: small|medium|large => ancho 300/360/420 px.
+			// No afecta al botón flotante (ese se controla con "Tamaño del icono (px)").
+			if ( S.size ) {
+				var winWidths = { small: '300px', medium: '360px', large: '420px' };
+				self.root.classList.remove( 'ygb-size-small', 'ygb-size-medium', 'ygb-size-large' );
+				self.root.classList.add( 'ygb-size-' + ( winWidths[ S.size ] ? S.size : 'medium' ) );
+				self.win.style.setProperty('--ygb-win-width', winWidths[ S.size ] || '360px');
 			}
 			// Colores del botón flotante.
 			if (S.bubbleColor) { self.root.style.setProperty('--ygb-bubble-color', S.bubbleColor); }
