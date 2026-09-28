@@ -221,88 +221,33 @@
 		this.addMsg('bot', '<p>' + esc(S.welcome || 'Hola') + '</p>', true);
 	};
 
-	/* Panel de temas / FAQ sugeridas: ocupa solo una línea con scroll
- * horizontal y puede plegarse/cerrarse con el botón de la esquina.
- * El estado plegado se recuerda en localStorage. */
-YgbWidget.prototype.isQuickCollapsed = function () {
-		try { return localStorage.getItem('ygb_quick_collapsed') === '1'; } catch (e) { return false; }
-};
-
-YgbWidget.prototype.setQuickCollapsed = function (collapsed) {
-		try {
-			if (collapsed) { localStorage.setItem('ygb_quick_collapsed', '1'); }
-			else { localStorage.removeItem('ygb_quick_collapsed'); }
-		} catch (e) { /* noop */ }
-		if (this.quick) {
-			this.quick.classList.toggle('ygb-collapsed', !!collapsed);
-			var tog = $('.ygb-quick-toggle', this.quick);
-			if (tog) { tog.setAttribute('aria-expanded', collapsed ? 'false' : 'true'); }
-		}
-};
-
-YgbWidget.prototype.buildQuickGroup = function (label, items, cls, textOf, idOf, iconOf) {
-		if (!items || !items.length) { return ''; }
-		var html = '<div class="ygb-quick-group">' +
-				'<span class="ygb-quick-label">' + esc(label) + '</span>' +
-				'<div class="ygb-quick-scroll">';
-		items.forEach(function (it) {
-			var icon = iconOf ? iconOf(it) : '';
-			html += '<button type="button" class="ygb-chip ' + cls + '" data-id="' + idOf(it) + '">' +
-						esc(icon ? icon + ' ' : '') + esc(textOf(it)) + '</button>';
-		});
-		html += '</div></div>';
-		return html;
-};
-
-YgbWidget.prototype.renderQuick = function (data) {
+	YgbWidget.prototype.renderQuick = function (data) {
 		var self = this;
 		var html = '';
-		html += this.buildQuickGroup(I18N.topicsTitle,
-			S.showTopics ? data.temas : null, 'ygb-chip-topic',
-			function (t) { return t.nombre; },
-			function (t) { return t.id; },
-			function (t) { return t.icono; });
-		html += this.buildQuickGroup(I18N.faqTitle,
-			S.showFaq ? data.faq : null, 'ygb-chip-faq',
-			function (f) { return f.pregunta; },
-			function (f) { return f.id; });
-		var hasContent = !!html;
-		if (hasContent) {
-			html += '<button type="button" class="ygb-quick-toggle" aria-expanded="true" ' +
-				'title="' + esc(I18N.quickToggle || 'Mostrar / ocultar temas y preguntas frecuentes') + '">' +
-				'<span class="ygb-quick-toggle-txt-open">▾ ' + esc(I18N.quickShow || 'Temas y preguntas frecuentes') + '</span>' +
-				'<span class="ygb-quick-toggle-txt-close">✕<span class="ygb-sr-only"> ' + esc(I18N.quickHide || 'Ocultar temas y preguntas frecuentes') + '</span></span>' +
-				'</button>';
+		if (S.showTopics && data.temas && data.temas.length) {
+			html += '<span class="ygb-quick-label">' + esc(I18N.topicsTitle) + '</span>';
+			data.temas.forEach(function (t) {
+				html += '<button type="button" class="ygb-chip ygb-chip-topic" data-id="' + t.id + '">' +
+					esc(t.icono ? t.icono + ' ' : '') + esc(t.nombre) + '</button>';
+			});
+		}
+		if (S.showFaq && data.faq && data.faq.length) {
+			html += '<span class="ygb-quick-label">' + esc(I18N.faqTitle) + '</span>';
+			data.faq.forEach(function (f) {
+				html += '<button type="button" class="ygb-chip ygb-chip-faq" data-id="' + f.id + '">' +
+					esc(f.pregunta) + '</button>';
+			});
 		}
 		this.quick.innerHTML = html;
-		this.quick.hidden = !hasContent;
-		// Si el usuario lo cerró antes, arranca plegado (una sola línea).
-		if (hasContent && this.isQuickCollapsed()) {
-			this.quick.classList.add('ygb-collapsed');
-			var tg = $('.ygb-quick-toggle', this.quick);
-			if (tg) { tg.setAttribute('aria-expanded', 'false'); }
-		}
+		this.quick.hidden = !html;
 		$all('.ygb-chip-topic,.ygb-chip-faq', this.quick).forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				self.ask(null, parseInt(btn.getAttribute('data-id'), 10));
 			});
 		});
-		var togBtn = $('.ygb-quick-toggle', this.quick);
-		if (togBtn) {
-			togBtn.addEventListener('click', function () {
-				self.setQuickCollapsed(!self.quick.classList.contains('ygb-collapsed'));
-			});
-		}
-};
+	};
 
-/* Al enviar un mensaje el panel se pliega para dejar sitio al chat. */
-YgbWidget.prototype.collapseQuickOnChat = function () {
-		if (this.quick && !this.quick.hidden && !this.quick.classList.contains('ygb-collapsed')) {
-			this.setQuickCollapsed(true);
-		}
-};
-
-YgbWidget.prototype.addMsg = function (who, html, skipSave) {
+	YgbWidget.prototype.addMsg = function (who, html, skipSave) {
 		var wrap = document.createElement('div');
 		wrap.className = 'ygb-msg ygb-msg-' + who;
 		var avatar = who === 'bot'
@@ -365,7 +310,6 @@ YgbWidget.prototype.addMsg = function (who, html, skipSave) {
 	/* Enviar pregunta (texto libre o por question_id) */
 	YgbWidget.prototype.ask = function (text, questionId) {
 		var self = this;
-		this.collapseQuickOnChat();
 		if (text) {
 			this.input.value = '';
 			this.addMsg('user', '<p>' + esc(text) + '</p>');
