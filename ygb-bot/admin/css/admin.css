@@ -187,3 +187,38 @@
 	.ygb-columns { flex-direction: column; }
 	.ygb-col { max-width: none; }
 }
+
+/* ---------- Logo de la burbuja: vistas previas ---------- */
+.ygb-bubble-logo-preview-btn,
+.ygb-preview-bubble {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: var(--preview-bubble-size, 56px);
+height: var(--preview-bubble-size, 56px);
+border-radius: 50%;
+background: #25d366;
+color: #fff;
+box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+overflow: hidden;
+vertical-align: middle;
+transition: background .15s ease;
+}
+.ygb-bubble-logo-thumb,
+.ygb-preview-bubble-logo {
+max-width: calc(100% * var(--preview-logo-scale, 1));
+max-height: calc(100% * var(--preview-logo-scale, 1));
+width: auto;
+height: auto;
+object-fit: contain;
+display: block;
+}
+.ygb-bubble-logo-thumb[hidden],
+.ygb-preview-bubble-logo[hidden] { display: none; }
+.ygb-bubble-logo-preview-btn[hidden] { display: none; }
+.ygb-preview-bubble-icon {
+font-size: calc(var(--preview-bubble-size, 56px) * .45);
+line-height: 1;
+}
+.ygb-preview-bubble-wrap { margin-bottom: 16px; }

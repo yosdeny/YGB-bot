@@ -76,12 +76,16 @@
 		}
 		ev.preventDefault();
 		var target = btn.closest( 'td' ).querySelector( '.ygb-media-input' );
-		var frame = window.wp.media( { frame: 'select', multiple: false, library: { type: '' } } );
+		var frame = window.wp.media( { frame: 'select', multiple: false, library: { type: 'image' } } );
 		frame.on( 'select', function () {
 			var att = frame.state().get( 'selection' ).first().toJSON();
 			var url = att.url || ( att.sizes && att.sizes.full ? att.sizes.full.url : '' );
 			if ( target && url ) {
 				target.value = url;
+				// Disparar 'input' para que los sincronizadores (avatar/logo) reaccionen.
+				if ( 'function' === typeof window.Event ) {
+					target.dispatchEvent( new window.Event( 'input', { bubbles: true } ) );
+				}
 				toast( cfg.i18n ? cfg.i18n.saved : 'OK' );
 			}
 		} );
@@ -170,6 +174,132 @@
 					syncAvatar();
 				} );
 			}
+		}
+
+		/* ---------- Logo de la burbuja: emoji / imagen con vista previa ---------- */
+		var bubbleHidden  = document.getElementById( 'ygb-bubble-logo' );      // <input type="hidden" name="[bubble_logo]">
+		var bubbleLogoUrl = document.getElementById( 'ygb-bubble-logo-url' );  // URL visible (auxiliar, no se guarda)
+
+		function clampPct( v ) {
+			var n = parseInt( v, 10 );
+			if ( isNaN( n ) ) { n = 100; }
+			return Math.max( 30, Math.min( 100, n ) );
+		}
+
+		function updateBubblePreview() {
+			var url   = bubbleHidden ? bubbleHidden.value : '';
+			var scale = clampPct( document.getElementById( 'ygb-bubble-logo-size' ) ? document.getElementById( 'ygb-bubble-logo-size' ).value : 100 ) / 100;
+			var color = document.getElementById( 'ygb-bubble-color' );
+			var hover = document.getElementById( 'ygb-bubble-color-hover' );
+			var icon  = document.getElementById( 'ygb-bubble-icon' );
+
+			// Miniatura dentro del campo "Logo personalizado".
+			var thumb = document.getElementById( 'ygb-bubble-logo-thumb' );
+			if ( thumb ) {
+				if ( isImageUrl( url ) ) {
+					thumb.src = url;
+					thumb.removeAttribute( 'hidden' );
+				} else {
+					thumb.removeAttribute( 'src' );
+					thumb.setAttribute( 'hidden', 'hidden' );
+				}
+			}
+			var thumbBtn = thumb ? thumb.closest( '.ygb-bubble-logo-preview-btn' ) : null;
+			if ( thumbBtn ) {
+				thumbBtn.hidden = ! isImageUrl( url );
+				thumbBtn.style.setProperty( '--preview-logo-scale', scale );
+				if ( color ) { thumbBtn.style.background = color.value; }
+			}
+
+			// Vista previa lateral del botón flotante.
+			var prev = document.querySelector( '.ygb-preview-bubble' );
+			if ( prev ) {
+				if ( color ) { prev.style.background = color.value; }
+				prev.style.setProperty( '--preview-logo-scale', scale );
+				var prevImg  = prev.querySelector( '.ygb-preview-bubble-logo' );
+				var prevIcon = prev.querySelector( '.ygb-preview-bubble-icon' );
+				if ( isImageUrl( url ) ) {
+					if ( ! prevImg ) {
+						prevImg = document.createElement( 'img' );
+						prevImg.className = 'ygb-preview-bubble-logo';
+						prevImg.alt = '';
+						prev.innerHTML = '';
+						prev.appendChild( prevImg );
+					}
+					prevImg.src = url;
+				} else {
+					if ( ! prevIcon ) {
+						prevIcon = document.createElement( 'span' );
+						prevIcon.className = 'ygb-preview-bubble-icon';
+						prev.innerHTML = '';
+						prev.appendChild( prevIcon );
+					}
+					prevIcon.textContent = icon ? icon.value : '';
+				}
+			}
+
+			// Hover de la vista previa (feedback inmediato del color hover).
+			if ( prev && hover ) {
+				if ( prev._ygbHoverIn ) { prev.removeEventListener( 'mouseenter', prev._ygbHoverIn ); }
+				if ( prev._ygbHoverOut ) { prev.removeEventListener( 'mouseleave', prev._ygbHoverOut ); }
+				prev._ygbHoverIn  = function () { prev.style.background = hover.value; };
+				prev._ygbHoverOut = function () { prev.style.background = color ? color.value : ''; };
+				prev.addEventListener( 'mouseenter', prev._ygbHoverIn );
+				prev.addEventListener( 'mouseleave', prev._ygbHoverOut );
+			}
+		}
+
+		function syncBubbleLogo() {
+			if ( ! bubbleHidden ) { return; }
+			var type = document.querySelector( 'input[name$="[bubble_icon_type]"]:checked' );
+			var mode = type ? type.value : ( isImageUrl( bubbleLogoUrl && bubbleLogoUrl.value ) ? 'image' : 'emoji' );
+			bubbleHidden.value = 'image' === mode && bubbleLogoUrl ? bubbleLogoUrl.value.trim() : '';
+			updateBubblePreview();
+		}
+
+		if ( bubbleHidden ) {
+			Array.prototype.forEach.call( document.querySelectorAll( 'input[name$="[bubble_icon_type]"]' ), function ( radio ) {
+				radio.addEventListener( 'change', function () {
+					var emojiBox = document.querySelector( '.ygb-bubble-emoji' );
+					var logoBox  = document.querySelector( '.ygb-bubble-logo' );
+					var isImage  = 'image' === this.value;
+					if ( emojiBox ) { emojiBox.hidden = isImage; }
+					if ( logoBox ) { logoBox.hidden = ! isImage; }
+					syncBubbleLogo();
+				} );
+			} );
+			if ( bubbleLogoUrl ) {
+				bubbleLogoUrl.addEventListener( 'input', syncBubbleLogo );
+			}
+			var logoClearBtn = document.querySelector( '.ygb-bubble-logo-clear' );
+			if ( logoClearBtn ) {
+				logoClearBtn.addEventListener( 'click', function () {
+					if ( bubbleLogoUrl ) { bubbleLogoUrl.value = ''; }
+					// Al quitar el logo se vuelve al modo emoji.
+					var emojiRadio = document.querySelector( 'input[name$="[bubble_icon_type]"][value="emoji"]' );
+					if ( emojiRadio ) { emojiRadio.checked = true; }
+					var emojiBox = document.querySelector( '.ygb-bubble-emoji' );
+					var logoBox  = document.querySelector( '.ygb-bubble-logo' );
+					if ( emojiBox ) { emojiBox.hidden = false; }
+					if ( logoBox ) { logoBox.hidden = true; }
+					syncBubbleLogo();
+				} );
+			}
+			// Sincronizar tamaño/colores/icono en vivo con las vistas previas.
+			[ document.getElementById( 'ygb-bubble-logo-size' ),
+				document.getElementById( 'ygb-bubble-color' ),
+				document.getElementById( 'ygb-bubble-color-hover' ),
+				document.getElementById( 'ygb-bubble-icon' ) ].forEach( function ( el ) {
+					if ( el ) {
+						el.addEventListener( 'input', updateBubblePreview );
+						el.addEventListener( 'change', updateBubblePreview );
+					}
+				} );
+			var bubbleForm = bubbleHidden.closest( 'form' );
+			if ( bubbleForm ) {
+				bubbleForm.addEventListener( 'submit', syncBubbleLogo );
+			}
+			updateBubblePreview();
 		}
 
 		/* ---------- Chat de prueba (Apariencia / Dashboard) ---------- */

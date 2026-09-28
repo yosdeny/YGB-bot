@@ -22,8 +22,13 @@ $ygb_theme    = isset( $ygb_theme ) && 'dark' === $ygb_theme ? 'dark' : 'light';
 	aria-label="<?php esc_attr_e( 'Chat de ayuda', 'ygb-bot' ); ?>">
 
 	<?php if ( ! $ygb_inline ) : ?>
+		<?php $ygb_bubble_logo = preg_match( '#^https?://#i', (string) $ygb_settings['bubble_logo'] ) ? $ygb_settings['bubble_logo'] : ''; ?>
 		<button type="button" class="ygb-bubble" aria-label="<?php esc_attr_e( 'Abrir chat', 'ygb-bot' ); ?>" aria-expanded="false">
-			<span class="ygb-bubble-icon" aria-hidden="true"><?php echo esc_html( $ygb_settings['bubble_icon'] ); ?></span>
+			<?php if ( $ygb_bubble_logo ) : ?>
+				<img class="ygb-bubble-logo" src="<?php echo esc_url( $ygb_bubble_logo ); ?>" alt="" aria-hidden="true" />
+			<?php else : ?>
+				<span class="ygb-bubble-icon" aria-hidden="true"><?php echo esc_html( $ygb_settings['bubble_icon'] ); ?></span>
+			<?php endif; ?>
 		</button>
 	<?php endif; ?>
 

@@ -92,6 +92,14 @@
 			self.root.style.setProperty('--ygb-bubble-size', parseInt(size, 10) + 'px');
 			self.root.style.setProperty('--ygb-bubble-offset-x', (isNaN(offX) ? 20 : parseInt(offX, 10)) + 'px');
 			self.root.style.setProperty('--ygb-bubble-offset-y', (isNaN(offY) ? 20 : parseInt(offY, 10)) + 'px');
+			// Escala del logo dentro del botón (30-100% del diámetro).
+			if (S.bubbleLogoSize != null && !isNaN(S.bubbleLogoSize)) {
+				var scale = Math.max(30, Math.min(100, parseInt(S.bubbleLogoSize, 10))) / 100;
+				self.root.style.setProperty('--ygb-bubble-logo-scale', String(scale));
+			}
+			// Colores del botón flotante.
+			if (S.bubbleColor) { self.root.style.setProperty('--ygb-bubble-color', S.bubbleColor); }
+			if (S.bubbleColorHover) { self.root.style.setProperty('--ygb-bubble-color-hover', S.bubbleColorHover); }
 		}
 		apply();
 		if (window.matchMedia) {

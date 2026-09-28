@@ -88,6 +88,10 @@ class Class_Ygb_Public {
 					'position'      => $settings['position'],
 					'color'         => $settings['color'],
 					'bubbleIcon'    => $settings['bubble_icon'],
+					'bubbleLogo'    => preg_match( '#^https?://#i', (string) $settings['bubble_logo'] ) ? $settings['bubble_logo'] : '',
+					'bubbleLogoSize' => max( 30, min( 100, absint( $settings['bubble_logo_size'] ) ) ),
+					'bubbleColor'       => Class_Ygb_DB::sanitize_hex( $settings['bubble_color'], '#25d366' ),
+					'bubbleColorHover'  => Class_Ygb_DB::sanitize_hex( $settings['bubble_color_hover'], '#128c7e' ),
 					'size'          => $settings['size'],
 				'bubbleSize'    => absint( $settings['bubble_size'] ),
 				'bubbleOffsetX' => absint( $settings['bubble_offset_x'] ),
@@ -125,12 +129,15 @@ class Class_Ygb_Public {
 
 		// Variables CSS de marca en inline (barato y cacheable por página).
 		$custom_css = sprintf(
-			':root{--ygb-color:%1$s;--ygb-color-dark:%2$s;--ygb-bubble-size:%3$dpx;--ygb-bubble-offset-x:%4$dpx;--ygb-bubble-offset-y:%5$dpx;}',
+			':root{--ygb-color:%1$s;--ygb-color-dark:%2$s;--ygb-bubble-size:%3$dpx;--ygb-bubble-offset-x:%4$dpx;--ygb-bubble-offset-y:%5$dpx;--ygb-bubble-color:%6$s;--ygb-bubble-color-hover:%7$s;--ygb-bubble-logo-scale:%8$s;}',
 			Class_Ygb_DB::sanitize_hex( $settings['color'] ),
 			self::darken_hex( $settings['color'] ),
 			absint( $settings['bubble_size'] ),
 			absint( $settings['bubble_offset_x'] ),
-			absint( $settings['bubble_offset_y'] )
+			absint( $settings['bubble_offset_y'] ),
+			Class_Ygb_DB::sanitize_hex( $settings['bubble_color'], '#25d366' ),
+			Class_Ygb_DB::sanitize_hex( $settings['bubble_color_hover'], '#128c7e' ),
+			number_format_i18n( max( 30, min( 100, absint( $settings['bubble_logo_size'] ) ) ) / 100, 2 )
 		);
 		$custom_css .= sprintf(
 			'@media (max-width:768px){:root{--ygb-bubble-size:%1$dpx;--ygb-bubble-offset-x:%2$dpx;--ygb-bubble-offset-y:%3$dpx;}}',
