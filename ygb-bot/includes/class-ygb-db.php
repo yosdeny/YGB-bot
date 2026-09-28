@@ -45,6 +45,7 @@ class Class_Ygb_DB {
 		),
 		'ygb_bot_apariencia'    => array(
 			'bot_name',
+			'avatar',
 			'color',
 			'position',
 			'bubble_icon',
@@ -163,6 +164,7 @@ class Class_Ygb_DB {
 			'privacy_url'    => '',
 			// Apariencia.
 			'bot_name'       => __( 'YGB Bot', 'ygb-bot' ),
+			'avatar'         => '🖥️',
 			'position'       => 'right',
 			'color'          => '#2271b1',
 			'bubble_icon'    => '💬',
@@ -301,9 +303,12 @@ class Class_Ygb_DB {
 		$out['bubble_color']       = $is_present( 'bubble_color' ) ? self::sanitize_hex( $input['bubble_color'], $out['bubble_color'] ) : $out['bubble_color'];
 		$out['bubble_color_hover'] = $is_present( 'bubble_color_hover' ) ? self::sanitize_hex( $input['bubble_color_hover'], $out['bubble_color_hover'] ) : $out['bubble_color_hover'];
 		// Logo de la burbuja: URL de imagen o cadena vacía (sin logo).
-		$out['bubble_logo'] = $is_present( 'bubble_logo' ) ? self::sanitize_image_or_text( $input['bubble_logo'] ) : $out['bubble_logo'];
+		$out['bubble_logo'] = $is_present( 'bubble_logo' ) ? self::sanitize_avatar( $input['bubble_logo'] ) : $out['bubble_logo'];
 		// Tamaño del logo dentro del botón: 30% - 100% del diámetro.
 		$out['bubble_logo_size'] = $is_present( 'bubble_logo_size' ) ? max( 30, min( 100, absint( $input['bubble_logo_size'] ) ) ) : $out['bubble_logo_size'];
+		// El avatar admite un emoji corto o una URL de imagen: antes se cortaba
+		// a 32 caracteres, lo que truncaba las URLs escritas a mano.
+		$out['avatar']    = $is_present( 'avatar' ) ? self::sanitize_avatar( $input['avatar'] ) : $out['avatar'];
 
 		if ( ! in_array( $out['position'], array( 'right', 'left' ), true ) ) {
 			$out['position'] = 'right';
@@ -352,8 +357,7 @@ class Class_Ygb_DB {
 	}
 
 	/**
-	 * Sanea un valor que puede ser una URL de imagen o un texto corto
-	 * (por ejemplo, el logo personalizado de la burbuja).
+	 * Sanitiza el avatar del bot.
 	 *
 	 * Acepta dos formatos:
 	 *  - Una URL de imagen (http/https), saneada con esc_url_raw().
@@ -362,7 +366,7 @@ class Class_Ygb_DB {
 	 * @param mixed $value Valor crudo del campo.
 	 * @return string
 	 */
-	public static function sanitize_image_or_text( $value ) {
+	public static function sanitize_avatar( $value ) {
 		$value = trim( (string) $value );
 
 		if ( '' === $value ) {
