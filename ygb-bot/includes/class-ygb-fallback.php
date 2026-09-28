@@ -56,10 +56,8 @@ class Class_Ygb_Fallback {
 	/**
 	 * Canales de soporte humano configurados (correo, WhatsApp, contacto, ticket).
 	 *
-	 * Se reutilizan tanto en el fallback automático como cuando el usuario pide
-	 * hablar con un humano: en ambos casos se ofrecen como mensajes/chips dentro
-	 * del propio canal de texto del chat (nunca en un botón persistente ni en una
-	 * ventana aparte).
+	 * Se reutiliza tanto en el fallback automático como en el botón persistente
+	 * "Hablar con soporte" del widget.
 	 *
 	 * @return array<int,array<string,string>>
 	 */
