@@ -70,11 +70,28 @@
 .ygb-typing .dot:nth-child(3){animation-delay:.4s}
 @keyframes ygb-blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
-/* Botones rápidos / chips */
-.ygb-quick{padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid #eee;background:#fff}
-.ygb-chip{border:1px solid var(--ygb-color,#2271b1);color:var(--ygb-color,#2271b1);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;transition:background .12s}
+/* Botones rápidos / chips.
+   El panel de temas y FAQ sugeridas ocupa una sola línea por grupo con scroll
+   horizontal (no envuelve), y puede plegarse/cerrarse con el botón
+   .ygb-quick-toggle. En estado plegado (.ygb-collapsed) solo queda visible
+   la línea del botón, liberando todo el espacio del chat. */
+.ygb-quick{padding:8px 12px;display:flex;flex-direction:column;gap:6px;border-top:1px solid #eee;background:#fff;position:relative}
+.ygb-quick-group{display:flex;align-items:center;gap:8px;min-width:0}
+.ygb-quick-scroll{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin;padding-bottom:2px;min-width:0;flex:1}
+.ygb-quick-scroll::-webkit-scrollbar{height:5px}
+.ygb-quick-scroll::-webkit-scrollbar-thumb{background:#c3c4c7;border-radius:3px}
+.ygb-chip{border:1px solid var(--ygb-color,#2271b1);color:var(--ygb-color,#2271b1);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;transition:background .12s;flex:0 0 auto}
 .ygb-chip:hover,.ygb-chip:focus-visible{background:var(--ygb-color,#2271b1);color:#fff;outline:2px solid transparent}
-.ygb-quick-label{width:100%;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970;margin-bottom:2px}
+.ygb-quick-label{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#646970;flex:0 0 auto}
+/* Botón plegar/cerrar del panel */
+.ygb-quick-toggle{align-self:flex-end;border:1px solid #dcdcde;background:#f6f7f7;color:#50575e;border-radius:8px;padding:3px 10px;font-size:11.5px;cursor:pointer;line-height:1.4}
+.ygb-quick-toggle:hover,.ygb-quick-toggle:focus-visible{background:#e3e5e7;outline:2px solid transparent}
+.ygb-quick-toggle-txt-open,.ygb-quick-toggle-txt-close{display:inline}
+.ygb-quick-toggle-txt-close{display:none}
+.ygb-quick.ygb-collapsed .ygb-quick-group{display:none}
+.ygb-quick.ygb-collapsed{padding:4px 12px}
+.ygb-quick.ygb-collapsed .ygb-quick-toggle-txt-open{display:none}
+.ygb-quick.ygb-collapsed .ygb-quick-toggle-txt-close{display:inline}
 
 /* Pie / formulario */
 .ygb-footer{border-top:1px solid #e3e5e7;background:#fff;padding:8px 10px 10px}
@@ -94,6 +111,9 @@
 .ygb-dark .ygb-typing{background:#2c3338;border-color:#3c434a;color:#c3c4c7}
 .ygb-dark .ygb-quick,.ygb-dark .ygb-footer{background:#1d2327;border-color:#3c434a}
 .ygb-dark .ygb-chip{background:transparent;color:#8ab1d9}
+.ygb-dark .ygb-quick-toggle{background:#2c3338;border-color:#3c434a;color:#c3c4c7}
+.ygb-dark .ygb-quick-toggle:hover,.ygb-dark .ygb-quick-toggle:focus-visible{background:#3c434a;color:#e3e5e7}
+.ygb-dark .ygb-quick-scroll::-webkit-scrollbar-thumb{background:#3c434a}
 .ygb-dark .ygb-input{background:#2c3338;border-color:#3c434a;color:#e3e5e7}
 .ygb-dark .ygb-support-persist{background:#2c3338;color:#8ab1d9}
 
