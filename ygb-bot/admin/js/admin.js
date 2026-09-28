@@ -88,7 +88,91 @@
 		frame.open();
 	} );
 
-	/* ---------- Chat de prueba (Apariencia / Dashboard) ---------- */
+	/* ---------- Avatar: sincronizar emoji / URL con el campo oculto ---------- */
+		var avatarHidden = document.getElementById( 'ygb-avatar' );
+		var avatarEmoji  = document.getElementById( 'ygb-avatar-emoji' );
+		var avatarUrl    = document.getElementById( 'ygb-avatar-url' );
+
+		function isImageUrl( v ) {
+			return /^https?:\/\//i.test( String( v || '' ).trim() );
+		}
+
+		function syncAvatar() {
+			if ( ! avatarHidden ) { return; }
+			var type = document.querySelector( 'input[name$="[avatar_type]"]:checked' );
+			var mode = type ? type.value : ( isImageUrl( avatarUrl && avatarUrl.value ) ? 'image' : 'emoji' );
+			var val  = 'image' === mode ? ( avatarUrl ? avatarUrl.value.trim() : '' ) : ( avatarEmoji ? avatarEmoji.value.trim() : '' );
+			avatarHidden.value = val;
+			updateAvatarPreview( val );
+		}
+
+		function updateAvatarPreview( val ) {
+			// Miniatura bajo el campo de URL (solo la del selector, id único).
+			var thumb = document.getElementById( 'ygb-avatar-thumb' );
+			if ( thumb ) {
+				if ( isImageUrl( val ) ) {
+					thumb.src = val;
+					thumb.removeAttribute( 'hidden' );
+				} else {
+					thumb.removeAttribute( 'src' );
+					thumb.setAttribute( 'hidden', 'hidden' );
+				}
+			}
+			// Vista previa de la tarjeta.
+			var prev = document.querySelector( '.ygb-preview-avatar' );
+			if ( prev ) {
+				if ( isImageUrl( val ) ) {
+					if ( 'IMG' !== prev.tagName ) {
+						var img = document.createElement( 'img' );
+						img.className = 'ygb-preview-avatar ygb-preview-avatar-img';
+						img.alt = '';
+						prev.parentNode.replaceChild( img, prev );
+						prev = img;
+					}
+					prev.src = val;
+				} else {
+					if ( 'IMG' === prev.tagName ) {
+						var span = document.createElement( 'span' );
+						span.className = 'ygb-preview-avatar';
+						prev.parentNode.replaceChild( span, prev );
+						prev = span;
+					}
+					prev.textContent = String( val || '' ).slice( 0, 2 );
+				}
+			}
+		}
+
+		if ( avatarHidden ) {
+			Array.prototype.forEach.call( document.querySelectorAll( 'input[name$="[avatar_type]"]' ), function ( radio ) {
+				radio.addEventListener( 'change', function () {
+					var emojiBox = document.querySelector( '.ygb-avatar-emoji' );
+					var imageBox = document.querySelector( '.ygb-avatar-image' );
+					var isImage  = 'image' === this.value;
+					if ( emojiBox ) { emojiBox.hidden = isImage; }
+					if ( imageBox ) { imageBox.hidden = ! isImage; }
+					syncAvatar();
+				} );
+			} );
+			[ avatarEmoji, avatarUrl ].forEach( function ( el ) {
+				if ( el ) {
+					el.addEventListener( 'input', syncAvatar );
+				}
+			} );
+			// Asegurar sincronía también al enviar (por si el evento input no ocurrió).
+			var avatarForm = avatarHidden.closest( 'form' );
+			if ( avatarForm ) {
+				avatarForm.addEventListener( 'submit', syncAvatar );
+			}
+			var clearBtn = document.querySelector( '.ygb-avatar-clear' );
+			if ( clearBtn ) {
+				clearBtn.addEventListener( 'click', function () {
+					if ( avatarUrl ) { avatarUrl.value = ''; }
+					syncAvatar();
+				} );
+			}
+		}
+
+		/* ---------- Chat de prueba (Apariencia / Dashboard) ---------- */
 	var testForm = document.getElementById( 'ygb-test-form' );
 	var testBox  = document.getElementById( 'ygb-test-chat' );
 	if ( testForm && testBox ) {

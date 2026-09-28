@@ -22,10 +22,33 @@ $s = Class_Ygb_DB::get_settings();
 						<td><input id="ygb-bot-name" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bot_name]" class="regular-text" value="<?php echo esc_attr( $s['bot_name'] ); ?>" /></td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="ygb-avatar"><?php esc_html_e( 'Avatar (emoji o URL de imagen)', 'ygb-bot' ); ?></label></th>
+						<th scope="row"><label for="ygb-avatar"><?php esc_html_e( 'Avatar (emoji o imagen)', 'ygb-bot' ); ?></label></th>
 						<td>
-							<input id="ygb-avatar" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar]" class="regular-text code" value="<?php echo esc_attr( $s['avatar'] ); ?>" />
-							<p class="description"><?php esc_html_e( 'Ej.: 🖥️ o https://…/avatar.png', 'ygb-bot' ); ?></p>
+							<fieldset class="ygb-avatar-field">
+								<label class="ygb-avatar-choice">
+									<input type="radio" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar_type]" value="emoji" <?php checked( ! preg_match( '#^https?://#i', $s['avatar'] ) ); ?> />
+									<?php esc_html_e( 'Emoji', 'ygb-bot' ); ?>
+								</label>
+								<label class="ygb-avatar-choice">
+									<input type="radio" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar_type]" value="image" <?php checked( (bool) preg_match( '#^https?://#i', $s['avatar'] ) ); ?> />
+									<?php esc_html_e( 'Imagen (URL)', 'ygb-bot' ); ?>
+								</label>
+								<div class="ygb-avatar-emoji"<?php echo preg_match( '#^https?://#i', $s['avatar'] ) ? ' hidden' : ''; ?>>
+									<input id="ygb-avatar-emoji" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar_emoji]" class="small-text code" maxlength="16" placeholder="🖥️" value="<?php echo esc_attr( preg_match( '#^https?://#i', $s['avatar'] ) ? '' : $s['avatar'] ); ?>" />
+									<p class="description"><?php esc_html_e( 'Ej.: 🖥️, 💬, 🤖…', 'ygb-bot' ); ?></p>
+								</div>
+								<div class="ygb-avatar-image"<?php echo preg_match( '#^https?://#i', $s['avatar'] ) ? '' : ' hidden'; ?>>
+									<input id="ygb-avatar-url" type="url" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar_url]" class="large-text code ygb-media-input" maxlength="2048" placeholder="https://…/avatar.png" value="<?php echo esc_attr( preg_match( '#^https?://#i', $s['avatar'] ) ? $s['avatar'] : '' ); ?>" />
+									<p class="description" style="margin-top:6px;">
+										<button type="button" class="button ygb-media-picker"><?php esc_html_e( 'Biblioteca de medios', 'ygb-bot' ); ?></button>
+										<button type="button" class="button-link ygb-avatar-clear"><?php esc_html_e( 'Quitar imagen', 'ygb-bot' ); ?></button>
+									</p>
+									<img id="ygb-avatar-thumb" class="ygb-avatar-thumb" alt="" src="<?php echo esc_url( preg_match( '#^https?://#i', $s['avatar'] ) ? $s['avatar'] : '' ); ?>"<?php echo preg_match( '#^https?://#i', $s['avatar'] ) ? '' : ' hidden'; ?> />
+								</div>
+								<!-- Valor final que se guarda: el JS sincroniza aquí el emoji o la URL. -->
+								<input id="ygb-avatar" type="hidden" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[avatar]" value="<?php echo esc_attr( $s['avatar'] ); ?>" />
+							</fieldset>
+							<p class="description"><?php esc_html_e( 'Puedes usar un emoji o una imagen: selecciónala desde la Biblioteca de medios o pega su URL completa (no se corta).', 'ygb-bot' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -132,7 +155,11 @@ $s = Class_Ygb_DB::get_settings();
 			<h2><?php esc_html_e( 'Vista previa', 'ygb-bot' ); ?></h2>
 			<div class="ygb-preview-card" style="--ygb-color:<?php echo esc_attr( $s['color'] ); ?>">
 				<div class="ygb-preview-header">
+					<?php if ( preg_match( '#^https?://#i', $s['avatar'] ) ) : ?>
+						<img class="ygb-preview-avatar ygb-preview-avatar-img" src="<?php echo esc_url( $s['avatar'] ); ?>" alt="" />
+					<?php else : ?>
 					<span class="ygb-preview-avatar"><?php echo esc_html( mb_substr( $s['avatar'], 0, 2 ) ); ?></span>
+					<?php endif; ?>
 					<span>
 						<strong><?php echo esc_html( $s['bot_name'] ); ?></strong><br />
 						<small><?php esc_html_e( '● En línea', 'ygb-bot' ); ?></small>
