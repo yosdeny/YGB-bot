@@ -35,7 +35,6 @@ $ygb_theme    = isset( $ygb_theme ) && 'dark' === $ygb_theme ? 'dark' : 'light';
 	<div class="ygb-window" role="dialog" aria-modal="false" aria-label="<?php esc_attr_e( 'Ventana de chat', 'ygb-bot' ); ?>" hidden>
 
 		<header class="ygb-header">
-			<span class="ygb-avatar" aria-hidden="true"><?php echo esc_html( $ygb_settings['avatar'] ); ?></span>
 			<span class="ygb-header-texts">
 				<strong class="ygb-title"><?php echo esc_html( $ygb_settings['bot_name'] ); ?></strong>
 				<small class="ygb-status"><span class="ygb-dot" aria-hidden="true"></span><?php esc_html_e( 'En línea', 'ygb-bot' ); ?></small>
