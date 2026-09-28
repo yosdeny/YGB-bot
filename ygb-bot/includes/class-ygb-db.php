@@ -259,7 +259,9 @@ class Class_Ygb_DB {
 
 		$out['threshold'] = $is_present( 'threshold' ) ? max( 1, min( 100, absint( $input['threshold'] ) ) ) : $out['threshold'];
 		$out['color']     = $is_present( 'color' ) ? self::sanitize_hex( $input['color'], $out['color'] ) : $out['color'];
-		$out['avatar']    = $is_present( 'avatar' ) ? mb_substr( sanitize_text_field( wp_unslash( $input['avatar'] ) ), 0, 32 ) : $out['avatar'];
+		// El avatar admite un emoji corto o una URL de imagen: antes se cortaba
+		// a 32 caracteres, lo que truncaba las URLs escritas a mano.
+		$out['avatar']    = $is_present( 'avatar' ) ? self::sanitize_avatar( $input['avatar'] ) : $out['avatar'];
 
 		if ( ! in_array( $out['position'], array( 'right', 'left' ), true ) ) {
 			$out['position'] = 'right';
@@ -305,6 +307,32 @@ class Class_Ygb_DB {
 			$all = array_merge( $all, $group_fields );
 		}
 		return array_unique( $all );
+	}
+
+	/**
+	 * Sanitiza el avatar del bot.
+	 *
+	 * Acepta dos formatos:
+	 *  - Una URL de imagen (http/https), saneada con esc_url_raw().
+	 *  - Un emoji o texto corto (máx. 16 caracteres).
+	 *
+	 * @param mixed $value Valor crudo del campo.
+	 * @return string
+	 */
+	public static function sanitize_avatar( $value ) {
+		$value = trim( (string) $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		// URL de imagen: conservar la ruta completa (no truncar).
+		if ( preg_match( '#^https?://#i', $value ) ) {
+			return esc_url_raw( $value );
+		}
+
+		// Emoji / texto corto.
+		return mb_substr( sanitize_text_field( wp_unslash( $value ) ), 0, 16 );
 	}
 
 	/**
