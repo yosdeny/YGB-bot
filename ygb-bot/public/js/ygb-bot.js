@@ -30,48 +30,6 @@
 		return d.innerHTML;
 	}
 
-	/* ------------------------------------------------------------------ */
-	/* Variables dinámicas en los mensajes: {{user}}, {{site}}, {{bot}}     */
-	/*                                                                     */
-	/* La sustitución se hace aquí, en tiempo de ejecución, para que un    */
-	/* mensaje guardado o cacheado con "{{user}}" muestre SIEMPRE el       */
-	/* nombre del visitante actual (y nada si no está autenticado).        */
-	/* ------------------------------------------------------------------ */
-	var VARS = {
-		user: S.userName || '',
-		usuario: S.userName || '',
-		nombre: S.userName || '',
-		name: S.userName || '',
-		site: S.siteName || '',
-		sitio: S.siteName || '',
-		bot: S.botName || '',
-		bot_name: S.botName || ''
-	};
-
-	function applyVars(text) {
-		if (text == null) { return ''; }
-		var str = String(text);
-		if (str.indexOf('{{') === -1) { return str; }
-		var out = str.replace(/\{\{\s*([\w\u0080-\uFFFF]+)\s*\}\}/g, function (whole, key) {
-			var k = String(key).toLowerCase();
-			return Object.prototype.hasOwnProperty.call(VARS, k) ? VARS[k] : whole;
-		});
-		// Si la variable quedó vacía, evita espacios dobles sobrantes.
-		out = out.replace(/[ \t]{2,}/g, ' ');
-		return out.trim();
-	}
-
-	/* Sustituye las variables solo en el texto visible, nunca dentro de
-	 * etiquetas/atributos HTML (respeta el marcado de las respuestas). */
-	function applyVarsHtml(html) {
-		if (html == null) { return ''; }
-		var parts = String(html).split(/(<[^>]+>)/g);
-		for (var i = 0; i < parts.length; i++) {
-			if (parts[i] && parts[i].charAt(0) !== '<') { parts[i] = applyVars(parts[i]); }
-		}
-		return parts.join('');
-	}
-
 	function timeNow() {
 		try {
 			return new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -344,9 +302,6 @@ YgbWidget.prototype.collapseQuickOnChat = function () {
 		}
 };
 
-	YgbWidget.prototype.addMsg = function (who, html, skipSave) {
-		// Sustituye {{user}} y compañía solo en el texto visible del mensaje.
-		html = applyVarsHtml(html);
 YgbWidget.prototype.addMsg = function (who, html, skipSave) {
 		var wrap = document.createElement('div');
 		wrap.className = 'ygb-msg ygb-msg-' + who;
