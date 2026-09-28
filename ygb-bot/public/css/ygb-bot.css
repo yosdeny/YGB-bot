@@ -10,11 +10,15 @@
 .ygb-widget.ygb-size-small{--ygb-win-width:300px}
 .ygb-widget.ygb-size-medium{--ygb-win-width:360px}
 .ygb-widget.ygb-size-large{--ygb-win-width:420px}
-.ygb-bubble{position:fixed;z-index:99998;width:var(--ygb-bubble-size,60px);height:var(--ygb-bubble-size,60px);border-radius:50%;border:0;cursor:pointer;background:var(--ygb-bubble-color,var(--ygb-color,#2271b1));color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;transition:transform .15s ease,background .15s ease;transform:scale(var(--ygb-btn-scale,1))}
+.ygb-bubble{position:fixed;z-index:99998;width:var(--ygb-bubble-size,60px);height:var(--ygb-bubble-size,60px);min-width:var(--ygb-bubble-size,60px);min-height:var(--ygb-bubble-size,60px);border-radius:50%;border:0;padding:0;cursor:pointer;background:var(--ygb-bubble-color,var(--ygb-color,#2271b1));color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:transform .15s ease,background .15s ease;transform:scale(var(--ygb-btn-scale,1))}
 .ygb-bubble:hover,.ygb-bubble:focus-visible{transform:scale(calc(var(--ygb-btn-scale,1)*1.07));background:var(--ygb-bubble-color-hover,var(--ygb-color-dark,#135e96));outline:2px solid currentColor}
 .ygb-bubble-icon{font-size:calc(var(--ygb-bubble-size,60px) * .45);line-height:1}
-/* Logo personalizado dentro del botón (tamaño relativo: 30-100% del diámetro) */
-.ygb-bubble-logo{max-width:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1));max-height:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1));width:auto;height:auto;object-fit:contain;display:block;border-radius:inherit}
+/* Logo personalizado dentro del botón (tamaño relativo: 30-100% del diámetro).
+   Se fijan también width/height explícitos y flex-shrink:0 para que ni los reseteos
+   de algunos temas ni el layout del flex del botón encojan la imagen (p. ej. en
+   páginas de WooCommerce donde aparecía muy pequeña). !important sobre las reglas
+   genéricas de img de los temas. */
+.ygb-bubble-logo{flex:0 0 auto;flex-shrink:0;width:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1));height:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1));max-width:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1))!important;max-height:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1))!important;min-width:0;min-height:0;object-fit:contain!important;display:block!important;border-radius:inherit}
 .ygb-pos-right .ygb-bubble{right:var(--ygb-bubble-offset-x,20px);bottom:var(--ygb-bubble-offset-y,20px)}
 .ygb-pos-left .ygb-bubble{left:var(--ygb-bubble-offset-x,20px);bottom:var(--ygb-bubble-offset-y,20px)}
 .ygb-bubble.ygb-hidden{display:none}
