@@ -15,8 +15,9 @@ $ygb_settings = array_merge(
 ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $ygb_inline   = isset( $ygb_inline ) ? (bool) $ygb_inline : false; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $ygb_theme    = isset( $ygb_theme ) && 'dark' === $ygb_theme ? 'dark' : 'light'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$ygb_size_pct   = max( 25, min( 100, absint( $ygb_settings['size'] ) ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 ?>
-<div class="ygb-widget ygb-<?php echo esc_attr( $ygb_theme ); ?> <?php echo $ygb_inline ? 'ygb-inline' : 'ygb-floating ygb-pos-' . esc_attr( $ygb_settings['position'] ); ?> ygb-size-<?php echo esc_attr( $ygb_settings['size'] ); ?>"
+<div class="ygb-widget ygb-<?php echo esc_attr( $ygb_theme ); ?> <?php echo $ygb_inline ? 'ygb-inline' : 'ygb-floating ygb-pos-' . esc_attr( $ygb_settings['position'] ); ?>" style="--ygb-window-width:<?php echo esc_attr( $ygb_size_pct ); ?>%"
 	data-ygb-instance="<?php echo $ygb_inline ? 'inline' : 'floating'; ?>"
 	role="region"
 	aria-label="<?php esc_attr_e( 'Chat de ayuda', 'ygb-bot' ); ?>">

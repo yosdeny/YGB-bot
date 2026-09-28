@@ -65,13 +65,10 @@ $s = Class_Ygb_DB::get_settings();
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="ygb-size"><?php esc_html_e( 'Tamaño', 'ygb-bot' ); ?></label></th>
+						<th scope="row"><label for="ygb-size"><?php esc_html_e( 'Tamaño (%)', 'ygb-bot' ); ?></label></th>
 						<td>
-							<select id="ygb-size" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[size]">
-								<option value="small" <?php selected( $s['size'], 'small' ); ?>><?php esc_html_e( 'Pequeño', 'ygb-bot' ); ?></option>
-								<option value="medium" <?php selected( $s['size'], 'medium' ); ?>><?php esc_html_e( 'Mediano', 'ygb-bot' ); ?></option>
-								<option value="large" <?php selected( $s['size'], 'large' ); ?>><?php esc_html_e( 'Grande', 'ygb-bot' ); ?></option>
-							</select>
+							<input id="ygb-size" type="number" min="25" max="100" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[size]" value="<?php echo esc_attr( max( 25, min( 100, absint( $s['size'] ) ) ) ); ?>" /> %
+							<p class="description"><?php esc_html_e( 'Ancho de la ventana del chat en porcentaje del área disponible (25-100%). Con 100% cubre todo el ancho.', 'ygb-bot' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -211,7 +208,7 @@ $s = Class_Ygb_DB::get_settings();
 				</span>
 				<p class="description"><?php esc_html_e( 'Vista previa del botón flotante (color, logo y tamaño).', 'ygb-bot' ); ?></p>
 			</div>
-			<div class="ygb-preview-card" style="--ygb-color:<?php echo esc_attr( $s['color'] ); ?>">
+			<div class="ygb-preview-card" style="--ygb-color:<?php echo esc_attr( $s['color'] ); ?>;width:<?php echo esc_attr( max( 25, min( 100, absint( $s['size'] ) ) ) ); ?>%">
 				<div class="ygb-preview-header">
 					<?php if ( preg_match( '#^https?://#i', $s['avatar'] ) ) : ?>
 						<img class="ygb-preview-avatar ygb-preview-avatar-img" src="<?php echo esc_url( $s['avatar'] ); ?>" alt="" />

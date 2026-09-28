@@ -1,5 +1,5 @@
 /* YGB Bot — estilos del widget frontend (mobile-first) */
-.ygb-widget{--ygb-radius:14px;font-size:15px;line-height:1.45}
+.ygb-widget{--ygb-radius:14px;font-size:15px;line-height:1.45;--ygb-window-width:55%}
 .ygb-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* Burbuja flotante (tamaños y desplazamientos configurables vía --ygb-bubble-*) */
@@ -21,12 +21,10 @@
 @media (max-width:768px){
   .ygb-pos-right .ygb-window,.ygb-pos-left .ygb-window{left:8px;right:8px;bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);height:72vh}
 }
-.ygb-inline .ygb-window{position:relative;inset:auto;height:460px;width:100%;max-width:420px;border:1px solid #dcdcde;margin:0 auto}
+.ygb-inline .ygb-window{position:relative;inset:auto;height:460px;width:var(--ygb-window-width,55%);border:1px solid #dcdcde;margin:0 auto}
 
-/* Tamaños */
-.ygb-size-small .ygb-window{width:300px}
-.ygb-size-medium .ygb-window{width:360px}
-.ygb-size-large .ygb-window{width:420px}
+/* Tamaño de la ventana: porcentaje del área disponible (configurable en Ajustes; 100% cubre todo el ancho) */
+.ygb-floating .ygb-window{width:min(var(--ygb-window-width,55%),calc(100vw - var(--ygb-bubble-offset-x,20px)*2));max-width:calc(100vw - var(--ygb-bubble-offset-x,20px)*2)}
 @media (max-width:768px){.ygb-window{width:auto!important}}
 
 /* Cabecera */

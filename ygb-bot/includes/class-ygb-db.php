@@ -175,7 +175,8 @@ class Class_Ygb_DB {
 			// Colores del botón flotante (independientes del color del chat).
 			'bubble_color'       => '#25d366',
 			'bubble_color_hover' => '#128c7e',
-			'size'           => 'medium',
+			// Ancho de la ventana del chat: porcentaje del área disponible (25-100).
+			'size'           => 55,
 			// Posición de la burbuja (escritorio).
 			'bubble_size'    => 50,
 			'bubble_offset_x' => 20,
@@ -313,9 +314,15 @@ class Class_Ygb_DB {
 		if ( ! in_array( $out['position'], array( 'right', 'left' ), true ) ) {
 			$out['position'] = 'right';
 		}
-		if ( ! in_array( $out['size'], array( 'small', 'medium', 'large' ), true ) ) {
-			$out['size'] = 'medium';
+		// Tamaño de la ventana: porcentaje (25-100). Se migran los valores
+		// heredados del antiguo desplegable (small/medium/large).
+		if ( $is_present( 'size' ) || is_numeric( $out['size'] ) ) {
+			$legacy_sizes = array( 'small' => 40, 'medium' => 55, 'large' => 70 );
+			if ( isset( $legacy_sizes[ $out['size'] ] ) ) {
+				$out['size'] = $legacy_sizes[ $out['size'] ];
+			}
 		}
+		$out['size'] = max( 25, min( 100, absint( $out['size'] ) ) );
 		$out['support_email'] = sanitize_email( $out['support_email'] );
 		$out['contact_url']   = esc_url_raw( $out['contact_url'] );
 		$out['privacy_url']   = esc_url_raw( $out['privacy_url'] );
