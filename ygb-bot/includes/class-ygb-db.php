@@ -154,7 +154,7 @@ class Class_Ygb_DB {
 			'privacy_url'    => '',
 			// Apariencia.
 			'bot_name'       => __( 'YGB Bot', 'ygb-bot' ),
-			'avatar'         => '🤖',
+			'avatar'         => '🖥️',
 			'position'       => 'right',
 			'color'          => '#2271b1',
 			'bubble_icon'    => '💬',
