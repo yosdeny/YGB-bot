@@ -8,6 +8,8 @@
 defined( 'ABSPATH' ) || exit;
 
 $s = Class_Ygb_DB::get_settings();
+// Nombre del usuario autenticado que se verá en la vista previa del mensaje.
+$ygb_preview_user = Class_Ygb_DB::current_user_name(); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 ?>
 <div class="wrap ygb-wrap">
 	<h1><?php esc_html_e( 'Apariencia', 'ygb-bot' ); ?></h1>
@@ -177,8 +179,28 @@ $s = Class_Ygb_DB::get_settings();
 								<p class="description"><?php esc_html_e( 'Distancia desde el borde inferior en móvil', 'ygb-bot' ); ?></p>
 							</td>
 						</tr>
-						<th scope="row"><label for="ygb-welcome"><?php esc_html_e( 'Mensaje de bienvenida', 'ygb-bot' ); ?></label></th>
-						<td><textarea id="ygb-welcome" rows="3" class="large-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[welcome]"><?php echo esc_textarea( $s['welcome'] ); ?></textarea></td>
+						<tr>
+							<th scope="row"><label for="ygb-welcome"><?php esc_html_e( 'Mensaje de bienvenida', 'ygb-bot' ); ?></label></th>
+						<td>
+							<textarea id="ygb-welcome" rows="3" class="large-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[welcome]"><?php echo esc_textarea( $s['welcome'] ); ?></textarea>
+							<p class="description">
+								<?php esc_html_e( 'Puedes insertar variables dinámicas: se sustituyen al mostrar el mensaje.', 'ygb-bot' ); ?>
+								<span class="ygb-var-buttons">
+									<button type="button" class="button-link ygb-insert-var" data-target="ygb-welcome" data-var="{{user}}" title="<?php esc_attr_e( 'Nombre del usuario conectado (vacío si no hay sesión)', 'ygb-bot' ); ?>">{%user}</button>
+									<button type="button" class="button-link ygb-insert-var" data-target="ygb-welcome" data-var="{{site}}">{%site}</button>
+									<button type="button" class="button-link ygb-insert-var" data-target="ygb-welcome" data-var="{{bot}}">{%bot}</button>
+								</span>
+							</p>
+							<p class="description">
+								<?php
+								printf(
+									/* translators: %s: nombre del usuario autenticado o texto "nadie". */
+									esc_html__( 'Ejemplo con tu sesión actual: «%s»', 'ygb-bot' ),
+									esc_html( trim( str_replace( '{{user}}', '' !== $ygb_preview_user ? $ygb_preview_user : __( '(sin usuario)', 'ygb-bot' ), $s['welcome'] ) ) )
+								);
+								?>
+							</p>
+						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="ygb-placeholder"><?php esc_html_e( 'Placeholder del campo de texto', 'ygb-bot' ); ?></label></th>
