@@ -67,8 +67,8 @@ $s = Class_Ygb_DB::get_settings();
 					<tr>
 						<th scope="row"><label for="ygb-size"><?php esc_html_e( 'Tamaño (%)', 'ygb-bot' ); ?></label></th>
 						<td>
-							<input id="ygb-size" type="number" min="25" max="100" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[size]" value="<?php echo esc_attr( max( 25, min( 100, absint( $s['size'] ) ) ) ); ?>" /> %
-							<p class="description"><?php esc_html_e( 'Ancho de la ventana del chat en porcentaje del área disponible (25-100%). Con 100% cubre todo el ancho.', 'ygb-bot' ); ?></p>
+							<input id="ygb-size" type="number" min="30" max="100" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[size]" value="<?php echo esc_attr( max( 30, min( 100, absint( $s['size'] ) ) ) ); ?>" /> %
+							<p class="description"><?php esc_html_e( 'Tamaño del botón en porcentaje respecto a su tamaño base (30-100%). Con 100% cubre todo el área del botón.', 'ygb-bot' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -199,7 +199,7 @@ $s = Class_Ygb_DB::get_settings();
 			<h2><?php esc_html_e( 'Vista previa', 'ygb-bot' ); ?></h2>
 			<?php $ygb_logo_scale = max( 30, min( 100, absint( $s['bubble_logo_size'] ) ) ) / 100; ?>
 			<div class="ygb-preview-bubble-wrap">
-				<span class="ygb-preview-bubble" style="--preview-bubble-size:<?php echo esc_attr( max( 30, min( 120, absint( $s['bubble_size'] ) ) ) ); ?>px;--preview-logo-scale:<?php echo esc_attr( $ygb_logo_scale ); ?>;background:<?php echo esc_attr( $s['bubble_color'] ); ?>;">
+				<span class="ygb-preview-bubble" style="--preview-bubble-size:<?php echo esc_attr( max( 30, min( 120, absint( $s['bubble_size'] ) ) ) ); ?>px;--preview-btn-scale:<?php echo esc_attr( number_format( max( 30, min( 100, absint( $s['size'] ) ) ) / 100, 2, '.', '' ) ); ?>;--preview-logo-scale:<?php echo esc_attr( $ygb_logo_scale ); ?>;background:<?php echo esc_attr( $s['bubble_color'] ); ?>;">
 					<?php if ( preg_match( '#^https?://#i', $s['bubble_logo'] ) ) : ?>
 						<img class="ygb-preview-bubble-logo" src="<?php echo esc_url( $s['bubble_logo'] ); ?>" alt="" />
 					<?php else : ?>
@@ -208,7 +208,7 @@ $s = Class_Ygb_DB::get_settings();
 				</span>
 				<p class="description"><?php esc_html_e( 'Vista previa del botón flotante (color, logo y tamaño).', 'ygb-bot' ); ?></p>
 			</div>
-			<div class="ygb-preview-card" style="--ygb-color:<?php echo esc_attr( $s['color'] ); ?>;width:<?php echo esc_attr( max( 25, min( 100, absint( $s['size'] ) ) ) ); ?>%">
+			<div class="ygb-preview-card" style="--ygb-color:<?php echo esc_attr( $s['color'] ); ?>">
 				<div class="ygb-preview-header">
 					<?php if ( preg_match( '#^https?://#i', $s['avatar'] ) ) : ?>
 						<img class="ygb-preview-avatar ygb-preview-avatar-img" src="<?php echo esc_url( $s['avatar'] ); ?>" alt="" />

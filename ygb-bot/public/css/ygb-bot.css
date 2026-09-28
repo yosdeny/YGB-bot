@@ -1,11 +1,11 @@
 /* YGB Bot — estilos del widget frontend (mobile-first) */
-.ygb-widget{--ygb-radius:14px;font-size:15px;line-height:1.45;--ygb-window-width:55%}
+.ygb-widget{--ygb-radius:14px;font-size:15px;line-height:1.45}
 .ygb-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* Burbuja flotante (tamaños y desplazamientos configurables vía --ygb-bubble-*) */
-.ygb-widget{--ygb-bubble-size:60px;--ygb-bubble-offset-x:20px;--ygb-bubble-offset-y:20px;--ygb-bubble-logo-scale:1}
-.ygb-bubble{position:fixed;z-index:99998;width:var(--ygb-bubble-size,60px);height:var(--ygb-bubble-size,60px);border-radius:50%;border:0;cursor:pointer;background:var(--ygb-bubble-color,var(--ygb-color,#2271b1));color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;transition:transform .15s ease,background .15s ease}
-.ygb-bubble:hover,.ygb-bubble:focus-visible{transform:scale(1.07);background:var(--ygb-bubble-color-hover,var(--ygb-color-dark,#135e96));outline:2px solid currentColor}
+.ygb-widget{--ygb-bubble-size:60px;--ygb-bubble-offset-x:20px;--ygb-bubble-offset-y:20px;--ygb-bubble-logo-scale:1;--ygb-btn-scale:1}
+.ygb-bubble{position:fixed;z-index:99998;width:var(--ygb-bubble-size,60px);height:var(--ygb-bubble-size,60px);border-radius:50%;border:0;cursor:pointer;background:var(--ygb-bubble-color,var(--ygb-color,#2271b1));color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;transition:transform .15s ease,background .15s ease;transform:scale(var(--ygb-btn-scale,1))}
+.ygb-bubble:hover,.ygb-bubble:focus-visible{transform:scale(calc(var(--ygb-btn-scale,1)*1.07));background:var(--ygb-bubble-color-hover,var(--ygb-color-dark,#135e96));outline:2px solid currentColor}
 .ygb-bubble-icon{font-size:calc(var(--ygb-bubble-size,60px) * .45);line-height:1}
 /* Logo personalizado dentro del botón (tamaño relativo: 30-100% del diámetro) */
 .ygb-bubble-logo{max-width:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1));max-height:calc(var(--ygb-bubble-size,60px) * var(--ygb-bubble-logo-scale,1));width:auto;height:auto;object-fit:contain;display:block;border-radius:inherit}
@@ -21,10 +21,10 @@
 @media (max-width:768px){
   .ygb-pos-right .ygb-window,.ygb-pos-left .ygb-window{left:8px;right:8px;bottom:calc(var(--ygb-bubble-offset-y,20px) + var(--ygb-bubble-size,60px) + 12px);height:72vh}
 }
-.ygb-inline .ygb-window{position:relative;inset:auto;height:460px;width:var(--ygb-window-width,55%);border:1px solid #dcdcde;margin:0 auto}
+.ygb-inline .ygb-window{position:relative;inset:auto;height:460px;width:100%;max-width:420px;border:1px solid #dcdcde;margin:0 auto}
 
-/* Tamaño de la ventana: porcentaje del área disponible (configurable en Ajustes; 100% cubre todo el ancho) */
-.ygb-floating .ygb-window{width:min(var(--ygb-window-width,55%),calc(100vw - var(--ygb-bubble-offset-x,20px)*2));max-width:calc(100vw - var(--ygb-bubble-offset-x,20px)*2)}
+/* Ancho fijo de la ventana del chat (el "Tamaño (%)" del panel afecta solo al botón) */
+.ygb-floating .ygb-window{width:min(360px,calc(100vw - var(--ygb-bubble-offset-x,20px)*2));max-width:calc(100vw - var(--ygb-bubble-offset-x,20px)*2)}
 @media (max-width:768px){.ygb-window{width:auto!important}}
 
 /* Cabecera */

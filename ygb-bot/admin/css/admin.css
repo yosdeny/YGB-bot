@@ -204,6 +204,8 @@ box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
 overflow: hidden;
 vertical-align: middle;
 transition: background .15s ease;
+/* Escala del botón por "Tamaño (%)": 100% cubre todo el área del botón. */
+transform: scale(var(--preview-btn-scale, 1));
 }
 .ygb-bubble-logo-thumb,
 .ygb-preview-bubble-logo {
