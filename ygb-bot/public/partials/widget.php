@@ -61,7 +61,17 @@ $ygb_size  = in_array( $ygb_settings['size'], array( 'small', 'medium', 'large' 
 
 		<div class="ygb-messages" id="ygb-messages" role="log" aria-live="polite" tabindex="0"></div>
 
-		<div class="ygb-quick" hidden></div>
+		<div class="ygb-quick" hidden>
+			<div class="ygb-quick-head">
+				<span class="ygb-quick-title"><?php esc_html_e( 'Menú inicial de temas y FAQ sugeridas', 'ygb-bot' ); ?></span>
+				<button type="button" class="ygb-quick-toggle" aria-expanded="true" aria-controls="ygb-quick-body"
+						title="<?php esc_attr_e( 'Plegar/expandir menú inicial', 'ygb-bot' ); ?>">
+						<span class="ygb-quick-indicator" aria-hidden="true">&#9662;</span>
+						<span class="screen-reader-text ygb-sr-only"><?php esc_html_e( 'Plegar/expandir menú inicial', 'ygb-bot' ); ?></span>
+				</button>
+			</div>
+			<div class="ygb-quick-body" id="ygb-quick-body"></div>
+		</div>
 
 		<footer class="ygb-footer">
 			<button type="button" class="ygb-support-persist" title="<?php esc_attr_e( 'Hablar con un agente humano', 'ygb-bot' ); ?>">

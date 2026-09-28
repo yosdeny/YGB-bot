@@ -95,6 +95,12 @@ msgstr ""
 msgid "Preguntas frecuentes:"
 msgstr ""
 
+msgid "Menú inicial de temas y FAQ sugeridas"
+msgstr ""
+
+msgid "Plegar/expandir menú inicial"
+msgstr ""
+
 msgid "¿Quisiste decir?"
 msgstr ""
 
