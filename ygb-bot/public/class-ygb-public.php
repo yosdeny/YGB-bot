@@ -128,10 +128,13 @@ class Class_Ygb_Public {
 		);
 
 		// Variables CSS de marca en inline (barato y cacheable por página).
-		// "size" es el Tamaño (%) del botón: escala sobre su diámetro base;
-		// 100% cubre todo el área del botón. La ventana conserva su ancho fijo.
+		// "size" es el Tamaño del widget (small|medium|large): afecta SOLO al ancho de la
+		// ventana del chat; el botón flotante se controla con "bubble_size" (px) y nunca
+		// se encoge con este desplegable.
+		$win_widths = array( 'small' => 300, 'medium' => 360, 'large' => 420 );
+		$win_width  = isset( $win_widths[ $settings['size'] ] ) ? $win_widths[ $settings['size'] ] : 360;
 		$custom_css = sprintf(
-			':root{--ygb-color:%1$s;--ygb-color-dark:%2$s;--ygb-bubble-size:%3$dpx;--ygb-bubble-offset-x:%4$dpx;--ygb-bubble-offset-y:%5$dpx;--ygb-bubble-color:%6$s;--ygb-bubble-color-hover:%7$s;--ygb-bubble-logo-scale:%8$s;--ygb-btn-scale:%9$s;}',
+			':root{--ygb-color:%1$s;--ygb-color-dark:%2$s;--ygb-bubble-size:%3$dpx;--ygb-bubble-offset-x:%4$dpx;--ygb-bubble-offset-y:%5$dpx;--ygb-bubble-color:%6$s;--ygb-bubble-color-hover:%7$s;--ygb-bubble-logo-scale:%8$s;--ygb-win-width:%9$dpx;}',
 			Class_Ygb_DB::sanitize_hex( $settings['color'] ),
 			self::darken_hex( $settings['color'] ),
 			absint( $settings['bubble_size'] ),
@@ -140,7 +143,7 @@ class Class_Ygb_Public {
 			Class_Ygb_DB::sanitize_hex( $settings['bubble_color'], '#25d366' ),
 			Class_Ygb_DB::sanitize_hex( $settings['bubble_color_hover'], '#128c7e' ),
 			number_format_i18n( max( 30, min( 100, absint( $settings['bubble_logo_size'] ) ) ) / 100, 2 ),
-			number_format_i18n( max( 30, min( 100, absint( $settings['size'] ) ) ) / 100, 2 )
+			$win_width
 		);
 		$custom_css .= sprintf(
 			'@media (max-width:768px){:root{--ygb-bubble-size:%1$dpx;--ygb-bubble-offset-x:%2$dpx;--ygb-bubble-offset-y:%3$dpx;}}',

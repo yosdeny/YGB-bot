@@ -15,9 +15,11 @@ $ygb_settings = array_merge(
 ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $ygb_inline   = isset( $ygb_inline ) ? (bool) $ygb_inline : false; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $ygb_theme    = isset( $ygb_theme ) && 'dark' === $ygb_theme ? 'dark' : 'light'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-$ygb_btn_scale  = max( 30, min( 100, absint( $ygb_settings['size'] ) ) ) / 100; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+// El desplegable "Tamaño" (small|medium|large) solo afecta al ancho de la ventana,
+// nunca al botón flotante (ese se controla con "Tamaño del icono (px)").
+$ygb_size  = in_array( $ygb_settings['size'], array( 'small', 'medium', 'large' ), true ) ? $ygb_settings['size'] : 'medium'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 ?>
-<div class="ygb-widget ygb-<?php echo esc_attr( $ygb_theme ); ?> <?php echo $ygb_inline ? 'ygb-inline' : 'ygb-floating ygb-pos-' . esc_attr( $ygb_settings['position'] ); ?>" style="--ygb-btn-scale:<?php echo esc_attr( number_format( $ygb_btn_scale, 2, '.', '' ) ); ?>"
+<div class="ygb-widget ygb-<?php echo esc_attr( $ygb_theme ); ?> ygb-size-<?php echo esc_attr( $ygb_size ); ?> <?php echo $ygb_inline ? 'ygb-inline' : 'ygb-floating ygb-pos-' . esc_attr( $ygb_settings['position'] ); ?>"
 	data-ygb-instance="<?php echo $ygb_inline ? 'inline' : 'floating'; ?>"
 	role="region"
 	aria-label="<?php esc_attr_e( 'Chat de ayuda', 'ygb-bot' ); ?>">
