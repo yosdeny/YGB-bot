@@ -81,8 +81,8 @@ class Class_Ygb_Admin {
 			)
 		);
 
-		// Media library solo donde se usa (selector de imagen/adjuntos en Preguntas).
-		if ( false !== strpos( $hook, 'preguntas' ) ) {
+		// Media library solo donde se usa (selector de imagen/adjuntos en Preguntas y logo de la burbuja en Apariencia).
+		if ( false !== strpos( $hook, 'preguntas' ) || false !== strpos( $hook, 'apariencia' ) ) {
 			wp_enqueue_media();
 		}
 	}

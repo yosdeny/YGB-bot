@@ -76,7 +76,54 @@ $s = Class_Ygb_DB::get_settings();
 					</tr>
 					<tr>
 						<th scope="row"><label for="ygb-bubble-icon"><?php esc_html_e( 'Icono de la burbuja', 'ygb-bot' ); ?></label></th>
-						<td><input id="ygb-bubble-icon" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_icon]" class="small-text code" maxlength="8" value="<?php echo esc_attr( $s['bubble_icon'] ); ?>" /></td>
+						<td>
+							<fieldset class="ygb-avatar-field">
+								<label class="ygb-avatar-choice">
+									<input type="radio" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_icon_type]" value="emoji" <?php checked( ! preg_match( '#^https?://#i', $s['bubble_logo'] ) ); ?> />
+									<?php esc_html_e( 'Emoji', 'ygb-bot' ); ?>
+								</label>
+								<label class="ygb-avatar-choice">
+									<input type="radio" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_icon_type]" value="image" <?php checked( (bool) preg_match( '#^https?://#i', $s['bubble_logo'] ) ); ?> />
+									<?php esc_html_e( 'Logo personalizado (imagen)', 'ygb-bot' ); ?>
+								</label>
+								<div class="ygb-bubble-emoji"<?php echo preg_match( '#^https?://#i', $s['bubble_logo'] ) ? ' hidden' : ''; ?>>
+									<input id="ygb-bubble-icon" type="text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_icon]" class="small-text code" maxlength="8" placeholder="💬" value="<?php echo esc_attr( $s['bubble_icon'] ); ?>" />
+									<p class="description"><?php esc_html_e( 'Ej.: 💬, 🖥️, 🤖…', 'ygb-bot' ); ?></p>
+								</div>
+								<div class="ygb-bubble-logo"<?php echo preg_match( '#^https?://#i', $s['bubble_logo'] ) ? '' : ' hidden'; ?>>
+									<input id="ygb-bubble-logo-url" type="url" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_logo_url]" class="large-text code ygb-media-input" maxlength="2048" placeholder="https://…/logo.png" value="<?php echo esc_attr( preg_match( '#^https?://#i', $s['bubble_logo'] ) ? $s['bubble_logo'] : '' ); ?>" />
+									<p class="description" style="margin-top:6px;">
+										<button type="button" class="button ygb-media-picker"><?php esc_html_e( 'Seleccionar imagen', 'ygb-bot' ); ?></button>
+										<button type="button" class="button-link ygb-bubble-logo-clear"><?php esc_html_e( 'Quitar logo', 'ygb-bot' ); ?></button>
+									</p>
+									<!-- Vista previa del logo dentro del botón -->
+									<span class="ygb-bubble-logo-preview-btn"<?php echo preg_match( '#^https?://#i', $s['bubble_logo'] ) ? '' : ' hidden'; ?> style="--preview-bubble-size:56px;--preview-logo-scale:<?php echo esc_attr( max( 30, min( 100, absint( $s['bubble_logo_size'] ) ) / 100 ) ); ?>;background:<?php echo esc_attr( $s['bubble_color'] ); ?>">
+										<img id="ygb-bubble-logo-thumb" class="ygb-bubble-logo-thumb" alt="" src="<?php echo esc_url( preg_match( '#^https?://#i', $s['bubble_logo'] ) ? $s['bubble_logo'] : '' ); ?>"<?php echo preg_match( '#^https?://#i', $s['bubble_logo'] ) ? '' : ' hidden'; ?> />
+									</span>
+									<p class="description"><?php esc_html_e( 'Vista previa del logo dentro del botón.', 'ygb-bot' ); ?></p>
+									<label for="ygb-bubble-logo-size" style="display:inline-block;margin-top:6px;"><strong><?php esc_html_e( 'Tamaño del logo (%)', 'ygb-bot' ); ?></strong></label>
+									<input id="ygb-bubble-logo-size" type="number" min="30" max="100" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_logo_size]" value="<?php echo esc_attr( max( 30, min( 100, absint( $s['bubble_logo_size'] ) ) ) ); ?>" />
+									<p class="description"><?php esc_html_e( 'Tamaño del logo dentro del botón (30-100% del diámetro).', 'ygb-bot' ); ?></p>
+								</div>
+								<!-- Valor final que se guarda: el JS sincroniza aquí la URL del logo (vacío = sin logo). -->
+								<input id="ygb-bubble-logo" type="hidden" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_logo]" value="<?php echo esc_attr( $s['bubble_logo'] ); ?>" />
+							</fieldset>
+							<p class="description"><?php esc_html_e( 'Elige un emoji o sube/selecciona un logo personalizado desde la Biblioteca de medios.', 'ygb-bot' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="ygb-bubble-color"><?php esc_html_e( 'Color del botón', 'ygb-bot' ); ?></label></th>
+						<td>
+							<input id="ygb-bubble-color" type="color" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_color]" value="<?php echo esc_attr( $s['bubble_color'] ); ?>" />
+							<p class="description"><?php esc_html_e( 'Por defecto: #25D366 (verde WhatsApp).', 'ygb-bot' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="ygb-bubble-color-hover"><?php esc_html_e( 'Color del botón al pasar el cursor', 'ygb-bot' ); ?></label></th>
+						<td>
+							<input id="ygb-bubble-color-hover" type="color" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[bubble_color_hover]" value="<?php echo esc_attr( $s['bubble_color_hover'] ); ?>" />
+							<p class="description"><?php esc_html_e( 'Por defecto: #128C7E (verde oscuro).', 'ygb-bot' ); ?></p>
+						</td>
 					</tr>
 					<tr>
 						<tr>
@@ -153,6 +200,17 @@ $s = Class_Ygb_DB::get_settings();
 
 		<div class="ygb-col ygb-col-preview">
 			<h2><?php esc_html_e( 'Vista previa', 'ygb-bot' ); ?></h2>
+			<?php $ygb_logo_scale = max( 30, min( 100, absint( $s['bubble_logo_size'] ) ) ) / 100; ?>
+			<div class="ygb-preview-bubble-wrap">
+				<span class="ygb-preview-bubble" style="--preview-bubble-size:<?php echo esc_attr( max( 30, min( 120, absint( $s['bubble_size'] ) ) ) ); ?>px;--preview-logo-scale:<?php echo esc_attr( $ygb_logo_scale ); ?>;background:<?php echo esc_attr( $s['bubble_color'] ); ?>;">
+					<?php if ( preg_match( '#^https?://#i', $s['bubble_logo'] ) ) : ?>
+						<img class="ygb-preview-bubble-logo" src="<?php echo esc_url( $s['bubble_logo'] ); ?>" alt="" />
+					<?php else : ?>
+						<span class="ygb-preview-bubble-icon"><?php echo esc_html( $s['bubble_icon'] ); ?></span>
+					<?php endif; ?>
+				</span>
+				<p class="description"><?php esc_html_e( 'Vista previa del botón flotante (color, logo y tamaño).', 'ygb-bot' ); ?></p>
+			</div>
 			<div class="ygb-preview-card" style="--ygb-color:<?php echo esc_attr( $s['color'] ); ?>">
 				<div class="ygb-preview-header">
 					<?php if ( preg_match( '#^https?://#i', $s['avatar'] ) ) : ?>

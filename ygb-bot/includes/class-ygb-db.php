@@ -49,6 +49,10 @@ class Class_Ygb_DB {
 			'color',
 			'position',
 			'bubble_icon',
+			'bubble_logo',
+			'bubble_logo_size',
+			'bubble_color',
+			'bubble_color_hover',
 			'size',
 			'bubble_size',
 			'bubble_offset_x',
@@ -164,6 +168,13 @@ class Class_Ygb_DB {
 			'position'       => 'right',
 			'color'          => '#2271b1',
 			'bubble_icon'    => '💬',
+			// Logo personalizado de la burbuja (URL de imagen o cadena vacía).
+			'bubble_logo'    => '',
+			// Tamaño del logo dentro del botón, en porcentaje del diámetro.
+			'bubble_logo_size' => 100,
+			// Colores del botón flotante (independientes del color del chat).
+			'bubble_color'       => '#25d366',
+			'bubble_color_hover' => '#128c7e',
 			'size'           => 'medium',
 			// Posición de la burbuja (escritorio).
 			'bubble_size'    => 50,
@@ -288,6 +299,13 @@ class Class_Ygb_DB {
 			}
 		}
 		$out['color']     = $is_present( 'color' ) ? self::sanitize_hex( $input['color'], $out['color'] ) : $out['color'];
+		// Colores del botón flotante (independientes del color del chat).
+		$out['bubble_color']       = $is_present( 'bubble_color' ) ? self::sanitize_hex( $input['bubble_color'], $out['bubble_color'] ) : $out['bubble_color'];
+		$out['bubble_color_hover'] = $is_present( 'bubble_color_hover' ) ? self::sanitize_hex( $input['bubble_color_hover'], $out['bubble_color_hover'] ) : $out['bubble_color_hover'];
+		// Logo de la burbuja: URL de imagen o cadena vacía (sin logo).
+		$out['bubble_logo'] = $is_present( 'bubble_logo' ) ? self::sanitize_avatar( $input['bubble_logo'] ) : $out['bubble_logo'];
+		// Tamaño del logo dentro del botón: 30% - 100% del diámetro.
+		$out['bubble_logo_size'] = $is_present( 'bubble_logo_size' ) ? max( 30, min( 100, absint( $input['bubble_logo_size'] ) ) ) : $out['bubble_logo_size'];
 		// El avatar admite un emoji corto o una URL de imagen: antes se cortaba
 		// a 32 caracteres, lo que truncaba las URLs escritas a mano.
 		$out['avatar']    = $is_present( 'avatar' ) ? self::sanitize_avatar( $input['avatar'] ) : $out['avatar'];
