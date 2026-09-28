@@ -250,14 +250,13 @@
 				}
 			}
 
-			// Tamaño del botón en la vista previa: escala en porcentaje (30-100).
-		var sizeInput  = document.getElementById( 'ygb-size' );
-		var previewBtn = document.querySelector( '.ygb-preview-bubble' );
-		if ( sizeInput && previewBtn ) {
-			var pct = parseInt( sizeInput.value, 10 );
-			if ( isNaN( pct ) ) { pct = 100; }
-			pct = Math.max( 30, Math.min( 100, pct ) );
-			previewBtn.style.setProperty( '--preview-btn-scale', ( pct / 100 ).toFixed( 2 ) );
+			// Tamaño de la ventana del chat en la vista previa (desplegable
+			// Pequeño/Mediano/Grande => ancho 300/360/420 px).
+		var sizeInput   = document.getElementById( 'ygb-size' );
+		var previewCard = document.querySelector( '.ygb-preview-card' );
+		if ( sizeInput && previewCard ) {
+			var winWidths = { small: '300px', medium: '360px', large: '420px' };
+			previewCard.style.width = winWidths[ sizeInput.value ] || '360px';
 		}
 
 		// Hover de la vista previa (feedback inmediato del color hover).

@@ -175,8 +175,8 @@ class Class_Ygb_DB {
 			// Colores del botón flotante (independientes del color del chat).
 			'bubble_color'       => '#25d366',
 			'bubble_color_hover' => '#128c7e',
-			// Tamaño del botón flotante: porcentaje del diámetro por defecto (30-100).
-			'size'           => 100,
+			// Tamaño de la ventana del chat: small|medium|large.
+			'size'           => 'medium',
 			// Posición de la burbuja (escritorio).
 			'bubble_size'    => 50,
 			'bubble_offset_x' => 20,
@@ -314,23 +314,9 @@ class Class_Ygb_DB {
 		if ( ! in_array( $out['position'], array( 'right', 'left' ), true ) ) {
 			$out['position'] = 'right';
 		}
-		// Tamaño del botón: porcentaje (30-100) respecto a su tamaño base.
-		// IMPORTANTE: se lee el valor enviado ($input); clamping sobre $out
-		// ignoraba el POST y siempre restauraba el valor anterior.
-		$raw_size = $is_present( 'size' ) ? $input['size'] : $out['size'];
-		// Se migran los valores heredados del antiguo desplegable de la ventana
-		// (small/medium/large) y los porcentajes de ventana previos (25-100):
-		// todos se interpretan como escala del botón, con 100% = área completa.
-		$legacy_sizes = array( 'small' => 60, 'medium' => 80, 'large' => 100 );
-		if ( is_string( $raw_size ) && isset( $legacy_sizes[ strtolower( trim( $raw_size ) ) ] ) ) {
-			$raw_size = $legacy_sizes[ strtolower( trim( $raw_size ) ) ];
+		if ( ! in_array( $out['size'], array( 'small', 'medium', 'large' ), true ) ) {
+			$out['size'] = 'medium';
 		}
-		// Si el valor no es un porcentaje válido (texto heredado sin migrar o
-		// campo vacío), se conserva el valor previo numérico o el defecto:
-		// absint() sobre una cadena como 'medium' produce 0 y rompería el clamp.
-		$size_pct   = absint( $raw_size );
-		$prev_size  = is_numeric( $out['size'] ) ? absint( $out['size'] ) : 100;
-		$out['size'] = max( 30, min( 100, $size_pct ? $size_pct : $prev_size ) );
 		$out['support_email'] = sanitize_email( $out['support_email'] );
 		$out['contact_url']   = esc_url_raw( $out['contact_url'] );
 		$out['privacy_url']   = esc_url_raw( $out['privacy_url'] );

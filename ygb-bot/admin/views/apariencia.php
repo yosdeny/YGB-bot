@@ -65,10 +65,14 @@ $s = Class_Ygb_DB::get_settings();
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="ygb-size"><?php esc_html_e( 'Tamaño (%)', 'ygb-bot' ); ?></label></th>
+						<th scope="row"><label for="ygb-size"><?php esc_html_e( 'Tamaño', 'ygb-bot' ); ?></label></th>
 						<td>
-							<input id="ygb-size" type="number" min="30" max="100" step="1" class="small-text" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[size]" value="<?php echo esc_attr( max( 30, min( 100, absint( $s['size'] ) ) ) ); ?>" /> %
-							<p class="description"><?php esc_html_e( 'Tamaño del botón en porcentaje respecto a su tamaño base (30-100%). Con 100% cubre todo el área del botón.', 'ygb-bot' ); ?></p>
+							<select id="ygb-size" name="<?php echo esc_attr( Class_Ygb_DB::OPTION_KEY ); ?>[size]">
+								<option value="small" <?php selected( $s['size'], 'small' ); ?>><?php esc_html_e( 'Pequeño', 'ygb-bot' ); ?></option>
+								<option value="medium" <?php selected( $s['size'], 'medium' ); ?>><?php esc_html_e( 'Mediano', 'ygb-bot' ); ?></option>
+								<option value="large" <?php selected( $s['size'], 'large' ); ?>><?php esc_html_e( 'Grande', 'ygb-bot' ); ?></option>
+							</select>
+							<p class="description"><?php esc_html_e( 'Ancho de la ventana del chat: Pequeño (300px), Mediano (360px) o Grande (420px).', 'ygb-bot' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -199,7 +203,7 @@ $s = Class_Ygb_DB::get_settings();
 			<h2><?php esc_html_e( 'Vista previa', 'ygb-bot' ); ?></h2>
 			<?php $ygb_logo_scale = max( 30, min( 100, absint( $s['bubble_logo_size'] ) ) ) / 100; ?>
 			<div class="ygb-preview-bubble-wrap">
-				<span class="ygb-preview-bubble" style="--preview-bubble-size:<?php echo esc_attr( max( 30, min( 120, absint( $s['bubble_size'] ) ) ) ); ?>px;--preview-btn-scale:<?php echo esc_attr( number_format( max( 30, min( 100, absint( $s['size'] ) ) ) / 100, 2, '.', '' ) ); ?>;--preview-logo-scale:<?php echo esc_attr( $ygb_logo_scale ); ?>;background:<?php echo esc_attr( $s['bubble_color'] ); ?>;">
+				<span class="ygb-preview-bubble" style="--preview-bubble-size:<?php echo esc_attr( max( 30, min( 120, absint( $s['bubble_size'] ) ) ) ); ?>px;--preview-logo-scale:<?php echo esc_attr( $ygb_logo_scale ); ?>;background:<?php echo esc_attr( $s['bubble_color'] ); ?>;">
 					<?php if ( preg_match( '#^https?://#i', $s['bubble_logo'] ) ) : ?>
 						<img class="ygb-preview-bubble-logo" src="<?php echo esc_url( $s['bubble_logo'] ); ?>" alt="" />
 					<?php else : ?>
