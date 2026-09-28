@@ -84,6 +84,7 @@ class Class_Ygb_Public {
 				'nonce'     => wp_create_nonce( 'ygb_public' ),
 				'settings'  => array(
 					'botName'       => $settings['bot_name'],
+					'avatar'        => $settings['avatar'],
 					'position'      => $settings['position'],
 					'color'         => $settings['color'],
 					'bubbleIcon'    => $settings['bubble_icon'],
