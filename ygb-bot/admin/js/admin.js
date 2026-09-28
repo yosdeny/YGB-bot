@@ -71,17 +71,29 @@
 	/* ---------- Selector de medios (wp.media) ---------- */
 	document.addEventListener( 'click', function ( ev ) {
 		var btn = ev.target.closest( '.ygb-media-picker' );
-		if ( ! btn || typeof window.wp === 'undefined' || ! window.wp.media ) {
+		if ( ! btn ) {
+			return;
+		}
+		if ( typeof window.wp === 'undefined' || ! window.wp.media ) {
+			// Sin la API de medios no hay selector: avisar en vez de no hacer nada.
+			toast( 'La biblioteca de medios no está disponible. Pega la URL de la imagen manualmente.', true );
 			return;
 		}
 		ev.preventDefault();
-		var target = btn.closest( 'td' ).querySelector( '.ygb-media-input' );
+		var scope  = btn.closest( 'fieldset' ) || btn.closest( 'td' ) || document;
+		var target = scope.querySelector( '.ygb-media-input' );
 		var frame = window.wp.media( { frame: 'select', multiple: false, library: { type: 'image' } } );
 		frame.on( 'select', function () {
 			var att = frame.state().get( 'selection' ).first().toJSON();
 			var url = att.url || ( att.sizes && att.sizes.full ? att.sizes.full.url : '' );
 			if ( target && url ) {
 				target.value = url;
+				// Activar automáticamente el modo "imagen" del grupo de radios (avatar/logo).
+				var imageRadio = scope.querySelector( 'input[type="radio"][value="image"]' );
+				if ( imageRadio && ! imageRadio.checked ) {
+					imageRadio.checked = true;
+					imageRadio.dispatchEvent( new window.Event( 'change', { bubbles: true } ) );
+				}
 				// Disparar 'input' para que los sincronizadores (avatar/logo) reaccionen.
 				if ( 'function' === typeof window.Event ) {
 					target.dispatchEvent( new window.Event( 'input', { bubbles: true } ) );

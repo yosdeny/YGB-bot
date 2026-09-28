@@ -57,11 +57,14 @@ class Class_Ygb_Admin {
 			YGB_BOT_VERSION
 		);
 		$js  = file_exists( YGB_BOT_PATH . 'admin/js/admin' . $suffix . '.js' ) ? 'admin/js/admin' . $suffix . '.js' : 'admin/js/admin.js';
-		$dep = false !== strpos( $hook, 'apariencia' ) || false !== strpos( $hook, 'dashboard' ) ? array( 'wp-media' ) : array();
+		// NOTA: 'wp-media' no es un handle registrado por WordPress; usarlo como
+		// dependencia impedía que admin.js se resolviera y se cargara (por eso el
+		// selector de imágenes no hacía nada). La librería de medios se carga más
+		// abajo con wp_enqueue_media().
 		wp_enqueue_script(
 			'ygb-admin',
 			YGB_BOT_URL . $js,
-			$dep,
+			array(),
 			YGB_BOT_VERSION,
 			true
 		);
