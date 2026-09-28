@@ -18,8 +18,15 @@ $ygb_theme    = isset( $ygb_theme ) && 'dark' === $ygb_theme ? 'dark' : 'light';
 // El desplegable "Tamaño" (small|medium|large) solo afecta al ancho de la ventana,
 // nunca al botón flotante (ese se controla con "Tamaño del icono (px)").
 $ygb_size  = in_array( $ygb_settings['size'], array( 'small', 'medium', 'large' ), true ) ? $ygb_settings['size'] : 'medium'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+// Escala del logo de la burbuja (30-100% => 0.3-1). Se define como variable CSS en el
+// propio contenedor .ygb-widget para que no dependa de la regla :root generada en
+// wp_head: así, en plantillas renderizadas fuera del ciclo normal de WordPress
+// (páginas de WooCommerce, builders, etc.) el logo conserva su tamaño configurado
+// y no se muestra diminuto por el valor por defecto.
+$ygb_logo_scale = max( 30, min( 100, absint( $ygb_settings['bubble_logo_size'] ) ) ) / 100; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 ?>
 <div class="ygb-widget ygb-<?php echo esc_attr( $ygb_theme ); ?> ygb-size-<?php echo esc_attr( $ygb_size ); ?> <?php echo $ygb_inline ? 'ygb-inline' : 'ygb-floating ygb-pos-' . esc_attr( $ygb_settings['position'] ); ?>"
+	style="--ygb-bubble-logo-scale:<?php echo esc_attr( rtrim( rtrim( sprintf( '%.2f', $ygb_logo_scale ), '0' ), '.' ) ); ?>;"
 	data-ygb-instance="<?php echo $ygb_inline ? 'inline' : 'floating'; ?>"
 	role="region"
 	aria-label="<?php esc_attr_e( 'Chat de ayuda', 'ygb-bot' ); ?>">
@@ -28,7 +35,7 @@ $ygb_size  = in_array( $ygb_settings['size'], array( 'small', 'medium', 'large' 
 		<?php $ygb_bubble_logo = preg_match( '#^https?://#i', (string) $ygb_settings['bubble_logo'] ) ? $ygb_settings['bubble_logo'] : ''; ?>
 		<button type="button" class="ygb-bubble" aria-label="<?php esc_attr_e( 'Abrir chat', 'ygb-bot' ); ?>" aria-expanded="false">
 			<?php if ( $ygb_bubble_logo ) : ?>
-				<img class="ygb-bubble-logo" src="<?php echo esc_url( $ygb_bubble_logo ); ?>" alt="" aria-hidden="true" />
+				<img width="70" height="70" class="ygb-bubble-logo" src="<?php echo esc_url( $ygb_bubble_logo ); ?>" alt="" aria-hidden="true" />
 			<?php else : ?>
 				<span class="ygb-bubble-icon" aria-hidden="true"><?php echo esc_html( $ygb_settings['bubble_icon'] ); ?></span>
 			<?php endif; ?>

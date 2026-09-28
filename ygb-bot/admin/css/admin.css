@@ -207,10 +207,11 @@ transition: background .15s ease;
 }
 .ygb-bubble-logo-thumb,
 .ygb-preview-bubble-logo {
-max-width: calc(100% * var(--preview-logo-scale, 1));
-max-height: calc(100% * var(--preview-logo-scale, 1));
-width: auto;
-height: auto;
+max-width: calc(100% * var(--preview-logo-scale, 1)) !important;
+max-height: calc(100% * var(--preview-logo-scale, 1)) !important;
+width: calc(100% * var(--preview-logo-scale, 1));
+height: calc(100% * var(--preview-logo-scale, 1));
+flex-shrink: 0;
 object-fit: contain;
 display: block;
 }
