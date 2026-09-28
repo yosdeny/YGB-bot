@@ -97,6 +97,11 @@
 				var scale = Math.max(30, Math.min(100, parseInt(S.bubbleLogoSize, 10))) / 100;
 				self.root.style.setProperty('--ygb-bubble-logo-scale', String(scale));
 			}
+			// Ancho de la ventana del chat: porcentaje del área disponible.
+			if (S.size != null && !isNaN(S.size)) {
+				var pct = Math.max(25, Math.min(100, parseInt(S.size, 10)));
+				self.root.style.setProperty('--ygb-window-width', pct + '%');
+			}
 			// Colores del botón flotante.
 			if (S.bubbleColor) { self.root.style.setProperty('--ygb-bubble-color', S.bubbleColor); }
 			if (S.bubbleColorHover) { self.root.style.setProperty('--ygb-bubble-color-hover', S.bubbleColorHover); }

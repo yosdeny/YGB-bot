@@ -238,7 +238,17 @@
 				}
 			}
 
-			// Hover de la vista previa (feedback inmediato del color hover).
+			// Ancho de la tarjeta de vista previa: porcentaje del tamaño de la ventana.
+		var sizeInput  = document.getElementById( 'ygb-size' );
+		var previewCard = document.querySelector( '.ygb-preview-card' );
+		if ( sizeInput && previewCard ) {
+			var pct = parseInt( sizeInput.value, 10 );
+			if ( isNaN( pct ) ) { pct = 55; }
+			pct = Math.max( 25, Math.min( 100, pct ) );
+			previewCard.style.width = pct + '%';
+		}
+
+		// Hover de la vista previa (feedback inmediato del color hover).
 			if ( prev && hover ) {
 				if ( prev._ygbHoverIn ) { prev.removeEventListener( 'mouseenter', prev._ygbHoverIn ); }
 				if ( prev._ygbHoverOut ) { prev.removeEventListener( 'mouseleave', prev._ygbHoverOut ); }
@@ -286,7 +296,8 @@
 				} );
 			}
 			// Sincronizar tamaño/colores/icono en vivo con las vistas previas.
-			[ document.getElementById( 'ygb-bubble-logo-size' ),
+			[ document.getElementById( 'ygb-size' ),
+				document.getElementById( 'ygb-bubble-logo-size' ),
 				document.getElementById( 'ygb-bubble-color' ),
 				document.getElementById( 'ygb-bubble-color-hover' ),
 				document.getElementById( 'ygb-bubble-icon' ) ].forEach( function ( el ) {
